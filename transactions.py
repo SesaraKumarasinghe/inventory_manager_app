@@ -55,7 +55,7 @@ class TransactionsManager:
 
         self.entry.bind("<Return>",self.search_bind)
 
-        self.transactions_window.protocol("WM DELETE WINDOW",self.close_connection)
+        self.transactions_window.protocol("WM_DELETE_WINDOW",self.close_connection)
 
     def tree_view(self):
         style = ttk.Style()
@@ -77,28 +77,28 @@ class TransactionsManager:
                              columns=("transaction_id", "products_id","user_id", "type", "unit_price", "quantity", "total_amount",
                                       "date"), show="headings")
         self.table.heading("transaction_id", text="Transaction ID")
-        self.table.column("transaction_id", width=70)
+        self.table.column("transaction_id", width=100)
 
         self.table.heading("products_id", text="Product ID")
-        self.table.column("products_id", width=70)
+        self.table.column("products_id", width=100)
 
         self.table.heading("user_id", text="User ID")
-        self.table.column("user_id", width=70)
+        self.table.column("user_id", width=100)
 
         self.table.heading("type", text="Type (purchase/sale)")
-        self.table.column("type", width=70)
+        self.table.column("type", width=150)
 
         self.table.heading("unit_price", text="Unit Price")
-        self.table.column("unit_price", width=70)
+        self.table.column("unit_price", width=120)
 
         self.table.heading("quantity", text="Quantity")
-        self.table.column("quantity", width=70)
+        self.table.column("quantity", width=100)
 
         self.table.heading("total_amount", text="Total")
-        self.table.column("total_amount", width=100)
+        self.table.column("total_amount", width=120)
 
         self.table.heading("date", text="Date")
-        self.table.column("date", width=100)
+        self.table.column("date", width=150)
 
         self.table.place(x=70, y=250, width=1750, height=700)
 
@@ -139,9 +139,13 @@ class TransactionsManager:
         cursor = self.dbcon.cursor()
         cursor.execute("select products_id, name from products")
         result = cursor.fetchall()
+
+        self.prdct_map = {name: pid for pid, name in result}
         cursor.close()
 
-        self.prdct_map = {name: products_id for products_id, name in result}
+        if not self.prdct_map:
+            messagebox.showerror("Error","No products found in database.",parent=self.add_win_popup)
+            return
 
         self.combo1 = ttk.Combobox(content_frame,values=list(self.prdct_map.keys()),state="readonly")
         self.combo1.place(x=210,y=20)
@@ -152,30 +156,30 @@ class TransactionsManager:
         cursor = self.dbcon.cursor()
         cursor.execute("select user_id, role from users")
         result1 = cursor.fetchall()
-        cursor.close()
 
         self.user_map = {role: uid for uid,role in result1}
+        cursor.close()
+
+        if not self.user_map:
+            messagebox.showerror("Error","No users found in database.",parent=self.add_win_popup)
+            return
 
         self.combo2 = ttk.Combobox(content_frame,values= list(self.user_map.keys()),state="readonly")
         self.combo2.place(x=210,y=60)
 
         lbl3 = Label(content_frame, text="Type",bg="White",fg="Black",font=("Arial",10))
         lbl3.place(x=20,y=100)
-
         type_options = ["Purchase", "Sale"]
-
         self.combo3 = ttk.Combobox(content_frame,values= type_options,state="readonly")
         self.combo3.place(x=210,y=100)
 
         lbl4 = Label(content_frame, text="Unit Price",bg="White",fg="Black",font=("Arial",10))
         lbl4.place(x=20,y=140)
-
         self.entry2 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
         self.entry2.place(x=210,y=140)
 
         lbl5 = Label(content_frame, text="Quantity",bg="White",fg="Black",font=("Arial",10))
         lbl5.place(x=20,y=180)
-
         self.entry3 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
         self.entry3.place(x=210,y=180)
 
@@ -205,7 +209,6 @@ class TransactionsManager:
 
             try:
                 cursor.execute("insert into transactions(products_id,user_id,type,unit_price,quantity,total_amount) values(%s,%s,%s,%s,%s,%s)",(prdct_id,u_id,tran_type,uni_p,qtty,ttl_amnt))
-                self.dbcon.commit()
 
                 if tran_type.lower() == "purchase":
                     cursor.execute("update products set quantity = quantity + %s where products_id = %s",(qtty,prdct_id))
@@ -215,17 +218,16 @@ class TransactionsManager:
                     quantity = cursor.fetchone()[0]
 
                     if quantity < qtty:
-                        messagebox.showerror("Failed",f"Transaction failed due to  no stock available in item: {product}.",parent=self.add_win_popup)
+                        messagebox.showerror("Failed",f"Transaction failed - not enough stock for item: {product}.",parent=self.add_win_popup)
                         self.dbcon.rollback()
                         return
 
                     cursor.execute("update products set quantity = quantity - %s where products_id = %s",(qtty,prdct_id))
 
                 self.dbcon.commit()
-
-            except mysql.connector.IntegrityError:
-                messagebox.showwarning("Duplicate Error","Data already exists in the database.",parent=self.add_win_popup)
-                return
+                messagebox.showinfo("Success", "Data successfully added to the database.", parent=self.add_win_popup)
+                self.load_transactions()
+                self.add_win_popup.destroy()
 
             except mysql.connector.Error as err:
                 messagebox.showerror("Database Error",str(err),parent=self.add_win_popup)
@@ -234,59 +236,48 @@ class TransactionsManager:
             finally:
                 cursor.close()
 
-            messagebox.showinfo("Success","Data successfully added to the database.",parent=self.add_win_popup)
-            self.load_transactions()
-            self.add_win_popup.destroy()
-
         save_but = Button(content_frame,text="Save",command=add_n_close,font=("Arial",8,"bold"),fg="White",bg="Green",relief="flat",width=10,height=2,activebackground="Green",activeforeground="White")
         save_but.place(x=150,y=250)
 
     def delete_tran(self):
         items = self.table.selection()
-
         if not items:
-            messagebox.showwarning("Warning","Please select at least one record to delete.",parent=self.transactions_window)
+            messagebox.showwarning("Warning", "Please select at least one record to delete.",
+                                   parent=self.transactions_window)
             return
 
-        confirmation = messagebox.askyesno("Confirm Deletion","Are you sure you want to delete the selected record(s)?",parent=self.transactions_window)
-
+        confirmation = messagebox.askyesno("Confirm Deletion",
+                                           "Are you sure you want to delete the selected record(s)?",
+                                           parent=self.transactions_window)
         if not confirmation:
             return
-
-        if confirmation:
-            cursor = self.dbcon.cursor()
 
         cursor = self.dbcon.cursor()
         try:
             for item in items:
                 tran_id = self.table.item(item)["values"][0]
-                prdct_id = self.table.item(item)["values"][1]
-                tran_type = self.table.item(item)["values"][3]
 
-                cursor.execute("select quantity from transactions where  transaction_id = %s",(tran_id,))
-                row = cursor.fetchone()
-                tran_qtty = row[0]
+                cursor.execute("select products_id,type,quantity from transactions where transaction_id = %s",
+                               (tran_id,))
+                prdct_id, tran_type, tran_qtty = cursor.fetchone()
 
-                cursor.execute("select quantity from products where products_id = %s",(prdct_id,))
-                row = cursor.fetchone()
-                prod_qtty = row[0]
-
+                # Correct stock adjustment
                 if tran_type.lower() == "purchase":
-                    cursor.execute("update products set quantity = %s - %s where products_id = %s",(prod_qtty,tran_qtty,prdct_id))
+                    cursor.execute("update products set quantity = quantity - %s where products_id = %s",
+                                   (tran_qtty, prdct_id))
+                elif tran_type.lower() == "sale":
+                    cursor.execute("update products set quantity = quantity + %s where products_id = %s",
+                                   (tran_qtty, prdct_id))
 
-                if tran_type.lower() == "sales":
-                    cursor.execute("update products set quantity = %s - %s where products_id = %s",(prod_qtty,tran_qtty,prdct_id))
-
-                cursor.execute("delete from transactions where transaction_id = %s", (tran_id))
+                cursor.execute("delete from transactions where transaction_id = %s", (tran_id,))
 
             self.dbcon.commit()
-            messagebox.showinfo("Success","Transaction(s) successfully deleted.",parent=self.transactions_window)
+            messagebox.showinfo("Success", "Transaction(s) successfully deleted.", parent=self.transactions_window)
             self.load_transactions()
 
         except mysql.connector.Error as err:
-            messagebox.showerror("Database Error",str(err),parent=self.transactions_window)
-            return
-
+            self.dbcon.rollback()
+            messagebox.showerror("Database Error", str(err), parent=self.transactions_window)
         finally:
             cursor.close()
 
@@ -318,12 +309,16 @@ class TransactionsManager:
             self.table.insert("","end",values=row)
 
     def refresh_table(self):
+        self.entry.delete(0,END)
         self.load_transactions()
 
     def close_connection(self):
-        if self.dbcon.is_connected():
-            self.dbcon.close()
-        self.transactions_window.destroy()
+        try:
+            if self.dbcon.is_connected():
+                self.dbcon.close()
+
+        finally:
+            self.transactions_window.destroy()
 
 
 

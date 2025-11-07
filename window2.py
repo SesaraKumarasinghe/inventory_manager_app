@@ -1,6 +1,6 @@
 from tkinter import *
 from PIL import Image, ImageTk
-from dashboard import dashboard
+from dashboard import Dashboard
 from products import ProductsManager
 from suppliers import Suppliermanager
 from transactions import TransactionsManager
@@ -23,7 +23,10 @@ def logged_in_window():
     img = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\DASHBOARD.jpg")
     dashboard_img = ImageTk.PhotoImage(img)
 
-    dashboard_but = Button(content_frame,text="Dashboard",command=dashboard,fg="Black",bg="#BF9031",font=("Georgia", 10, "bold"), image=dashboard_img,compound=TOP,relief=FLAT,activebackground="White",activeforeground="Black",bd=0)
+    def open_dashboard():
+        Dashboard(window2)
+
+    dashboard_but = Button(content_frame,text="Dashboard",command=open_dashboard,fg="Black",bg="#BF9031",font=("Georgia", 10, "bold"), image=dashboard_img,compound=TOP,relief=FLAT,activebackground="White",activeforeground="Black",bd=0)
     dashboard_but.image = dashboard_img
     dashboard_but.place(x=50, y=50)
 
