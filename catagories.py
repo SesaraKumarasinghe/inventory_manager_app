@@ -4,15 +4,13 @@ import mysql.connector
 from tkinter import messagebox
 
 class CatagoryManager:
-
-    def __init__(self,root):
-
+    def __init__(self, root):
         self.dbcon = mysql.connector.connect(
             host="localhost",
             user="root",
             password="root",
-            database="Inventory_manager_db")
-        
+            database="Inventory_manager_db"
+        )
         self.root = root
         self.create_window()
         self.set_up_treeview()
@@ -20,89 +18,121 @@ class CatagoryManager:
     def create_window(self):
         self.catagory_window = Toplevel(self.root)
         self.catagory_window.title("Desktop Inventory Management System")
-        self.catagory_window.geometry("1920x1080")
+        self.catagory_window.geometry("1300x800")  # 🔹 Standard window size
         self.catagory_window.config(bg="#1E1E1E")
 
-        heading = Label(self.catagory_window, text="Catagories", bg="#1E1E1E", fg="White", font=("Georgia",50,"bold"))
-        heading.place(x=750, y=10)
+        heading = Label(self.catagory_window, text="Categories",
+                        bg="#1E1E1E", fg="White",
+                        font=("Georgia", 42, "bold"))
+        heading.place(x=500, y=10)
 
         self.create_main_frame()
 
     def create_main_frame(self):
-        self.content_frame = Frame(self.catagory_window,bg="#F1F0F0")
-        self.content_frame.place(x=50, y=100, width=1800, height=900)
+        self.content_frame = Frame(self.catagory_window, bg="#F1F0F0")
+        self.content_frame.place(x=30, y=80, width=1240, height=670)
 
-        sub_heading = Label(self.content_frame, text="Welcome, Admin!", bg="#F1F0F0", fg="#1E1E1E", font=("TkDefaultFont",30,"bold"))
+        sub_heading = Label(self.content_frame, text="Welcome, Admin!",
+                            bg="#F1F0F0", fg="#1E1E1E",
+                            font=("TkDefaultFont", 24, "bold"))
         sub_heading.place(x=20, y=10)
 
-        underline = Frame(self.content_frame, bg="#1E1E1E", height=4, width=1800)
-        underline.place(x=0,y=70)
+        underline = Frame(self.content_frame, bg="#1E1E1E", height=3, width=1240)
+        underline.place(x=0, y=55)
 
-        add_cat = Button(self.content_frame, text="Add Catagory",command=self.open_add_win,relief=FLAT, bg="#3962A3", fg="White",activebackground="#3962A3",activeforeground="White",font=("Arial",10))
-        add_cat.place(x=30, y=100)
-        update_cat = Button(self.content_frame, text="Update Catagory",command=self.open_update_win,relief=FLAT, bg="#359E0B", fg="White",activebackground="#359E0B",activeforeground="White",font=("Arial",10))
-        update_cat.place(x=150, y=100)
-        del_cat = Button(self.content_frame, text="Delete Catagory",command=self.delete_items,relief=FLAT, bg="#F42325", fg="White",activebackground="#F42325",activeforeground="White",font=("Arial",10))
-        del_cat.place(x=290, y=100)
+        # 🔹 Buttons
+        add_cat = Button(self.content_frame, text="Add Category",
+                         command=self.open_add_win, relief=FLAT,
+                         bg="#3962A3", fg="White",
+                         activebackground="#3962A3",
+                         activeforeground="White",
+                         font=("Arial", 9))
+        add_cat.place(x=30, y=80)
 
-        search_cat = Label(self.content_frame,text="Search", bg="#F1F0F0",fg="#1E1E1E",font=("Arial",13,"bold"))
-        search_cat.place(x=420, y=102)
+        update_cat = Button(self.content_frame, text="Update Category",
+                            command=self.open_update_win, relief=FLAT,
+                            bg="#359E0B", fg="White",
+                            activebackground="#359E0B",
+                            activeforeground="White",
+                            font=("Arial", 9))
+        update_cat.place(x=140, y=80)
 
-        self.search_entry = Entry(self.content_frame,width=25,font=("Arial",13))
-        self.search_entry.bind("<Return>",self.search_cat_event)
-        self.search_entry.place(x=490,y=103)
+        del_cat = Button(self.content_frame, text="Delete Category",
+                         command=self.delete_items, relief=FLAT,
+                         bg="#F42325", fg="White",
+                         activebackground="#F42325",
+                         activeforeground="White",
+                         font=("Arial", 9))
+        del_cat.place(x=270, y=80)
 
-        def refresh_table():
-            self.load_catagories()
+        search_cat = Label(self.content_frame, text="Search",
+                           bg="#F1F0F0", fg="#1E1E1E",
+                           font=("Arial", 11, "bold"))
+        search_cat.place(x=400, y=82)
 
-        refresh_btn = Button(self.content_frame, text="⟳ Refresh",command=refresh_table, bg="#2ECC71", fg="white", relief=FLAT,activebackground="#48C9B0", font=("Arial", 10))
-        refresh_btn.place(x=770,y=100)
+        self.search_entry = Entry(self.content_frame, width=25, font=("Arial", 12))
+        self.search_entry.bind("<Return>", self.search_cat_event)
+        self.search_entry.place(x=470, y=83)
+
+        refresh_btn = Button(self.content_frame, text="⟳ Refresh",
+                             command=self.load_catagories,
+                             bg="#2ECC71", fg="white",
+                             relief=FLAT, activebackground="#48C9B0",
+                             font=("Arial", 9))
+        refresh_btn.place(x=770, y=80)
+
+        self.catagory_window.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def set_up_treeview(self):
         style = ttk.Style()
         style.theme_use("default")
 
         style.configure("Treeview",
-                    background = "White",
-                    foreground= "Black",
-                    fieldbackground= "White",
-                    rowheight = 30)
-    
+                        background="White",
+                        foreground="Black",
+                        fieldbackground="White",
+                        rowheight=28)
+
         style.configure("Treeview.Heading",
-                    background="#548DCF",
-                    foreground="White",
-                    font=("Arial",12,"bold"),
-                    height = 10)
-        
-        self.table = ttk.Treeview(self.catagory_window, columns=("catagory_id","catagory_name"),show="headings")
-        self.table.heading("catagory_id",text="Catagory ID")
-        self.table.heading("catagory_name",text= "Catagory Name")
-        self.table.column("catagory_id", width=200, anchor="w")
-        self.table.column("catagory_name", width=400, anchor="w")
+                        background="#548DCF",
+                        foreground="White",
+                        font=("Arial", 11, "bold"))
 
-        self.table.place(x=70,y=250,width=1750,height=700)
+        self.table = ttk.Treeview(self.content_frame,
+                                  columns=("catagory_id", "catagory_name"),
+                                  show="headings")
 
-        self.scrollbar = Scrollbar(self.catagory_window, orient="vertical", command=self.table.yview)
+        self.table.heading("catagory_id", text="Category ID")
+        self.table.heading("catagory_name", text="Category Name")
+
+        self.table.column("catagory_id", width=250, anchor="center")
+        self.table.column("catagory_name", width=500, anchor="w")
+
+        self.table.place(x=20, y=150, width=1180, height=480)
+
+        self.scrollbar = Scrollbar(self.content_frame, orient="vertical", command=self.table.yview)
         self.table.configure(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.place(x=1200, y=150, height=480)
 
-        self.scrollbar.place(x=1820, y=250, height=700)
-    
         self.load_catagories()
 
     def load_catagories(self):
-        self.cursor = self.dbcon.cursor()
-        self.cursor.execute("select * from catagories")
-        rows = self.cursor.fetchall()
+        cursor = self.dbcon.cursor()
+        cursor.execute("SELECT * FROM catagories")
+        rows = cursor.fetchall()
+        cursor.close()
 
         for item in self.table.get_children():
             self.table.delete(item)
-
         for row in rows:
-            self.table.insert("","end",values=row)
+            self.table.insert("", "end", values=row)
 
     def open_add_win(self):
         self.add_window()
-        
+
+    def open_update_win(self):
+        self.update_window()
+
     def add_window(self):
         add_win_popup = Toplevel(self.catagory_window)
         add_win_popup.geometry("500x500")
@@ -165,9 +195,6 @@ class CatagoryManager:
 
         save_but = Button(content_frame,text="Save",command=add_data_savenclose,font=("Arial",8,"bold"),fg="White",bg="Green",relief=FLAT,width=10,height=2,activebackground="Green",activeforeground="White")
         save_but.place(x=150,y=150)
-
-    def open_update_win(self):
-        self.update_window()
 
     def update_window(self):
         update_win_popup = Toplevel(self.catagory_window)

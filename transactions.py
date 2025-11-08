@@ -5,13 +5,13 @@ import mysql.connector
 
 
 class TransactionsManager:
-    def __init__(self,root):
+    def __init__(self, root):
         self.dbcon = mysql.connector.connect(
             host="localhost",
             user="root",
             password="root",
             database="Inventory_manager_db"
-)
+        )
         self.root = root
         self.main_window()
         self.tree_view()
@@ -19,92 +19,137 @@ class TransactionsManager:
     def main_window(self):
         self.transactions_window = Toplevel()
         self.transactions_window.title("Desktop Inventory Management System")
-        self.transactions_window.geometry("1920x1080")
+        self.transactions_window.geometry("1300x800")
         self.transactions_window.config(bg="#1E1E1E")
 
-        heading = Label(self.transactions_window, text="Transactions", bg="#1E1E1E", fg="White",
-                        font=("Georgia", 50, "bold"))
-        heading.place(x=750, y=10)
+        heading = Label(
+            self.transactions_window,
+            text="Transactions",
+            bg="#1E1E1E",
+            fg="White",
+            font=("Georgia", 38, "bold")
+        )
+        heading.place(x=480, y=10)
 
         self.content_frame = Frame(self.transactions_window, bg="#F1F0F0")
-        self.content_frame.place(x=50, y=100, width=1800, height=900)
+        self.content_frame.place(x=30, y=80, width=1240, height=670)
 
-        sub_heading = Label(self.content_frame, text="Welcome, Admin!", bg="#F1F0F0", fg="#1E1E1E",
-                            font=("TkDefaultFont", 30, "bold"))
+        sub_heading = Label(
+            self.content_frame,
+            text="Welcome, Admin!",
+            bg="#F1F0F0",
+            fg="#1E1E1E",
+            font=("TkDefaultFont", 22, "bold")
+        )
         sub_heading.place(x=20, y=10)
 
-        underline = Frame(self.content_frame, bg="#1E1E1E", height=4, width=1800)
-        underline.place(x=0, y=70)
+        underline = Frame(self.content_frame, bg="#1E1E1E", height=3, width=1240)
+        underline.place(x=0, y=55)
 
-        add_tran = Button(self.content_frame, text="Add Transaction",command=self.open_add_win, relief="flat", bg="#3962A3", fg="White",
-                          activebackground="#3962A3", activeforeground="White", font=("Arial", 10))
-        add_tran.place(x=30, y=100)
+        add_tran = Button(
+            self.content_frame,
+            text="Add Transaction",
+            command=self.open_add_win,
+            relief="flat",
+            bg="#3962A3",
+            fg="White",
+            activebackground="#3962A3",
+            activeforeground="White",
+            font=("Arial", 9)
+        )
+        add_tran.place(x=30, y=80)
 
-        del_tran = Button(self.content_frame, text="Delete Transaction",command=self.delete_tran,relief="flat", bg="#F42325", fg="White",
-                          activebackground="#F42325", activeforeground="White", font=("Arial", 10))
-        del_tran.place(x=150, y=100)
+        del_tran = Button(
+            self.content_frame,
+            text="Delete Transaction",
+            command=self.delete_tran,
+            relief="flat",
+            bg="#F42325",
+            fg="White",
+            activebackground="#F42325",
+            activeforeground="White",
+            font=("Arial", 9)
+        )
+        del_tran.place(x=150, y=80)
 
-        search_sup = Label(self.content_frame, text="Search", bg="#F1F0F0", fg="#1E1E1E", font=("Arial", 13, "bold"))
-        search_sup.place(x=300, y=102)
+        search_sup = Label(
+            self.content_frame,
+            text="Search",
+            bg="#F1F0F0",
+            fg="#1E1E1E",
+            font=("Arial", 11, "bold")
+        )
+        search_sup.place(x=300, y=82)
 
-        refresh_btn = Button(self.content_frame, text="⟳ Refresh",command=self.refresh_table, bg="#2ECC71", fg="white", relief=FLAT,activebackground="#48C9B0", font=("Arial", 10))
-        refresh_btn.place(x=770,y=100)
+        self.entry = Entry(self.content_frame, width=25, font=("Arial", 12))
+        self.entry.place(x=370, y=83)
+        self.entry.bind("<Return>", self.search_bind)
 
-        self.entry = Entry(self.content_frame, width=25, font=("Arial", 13))
-        self.entry.place(x=370, y=103)
+        refresh_btn = Button(
+            self.content_frame,
+            text="⟳ Refresh",
+            command=self.refresh_table,
+            bg="#2ECC71",
+            fg="white",
+            relief=FLAT,
+            activebackground="#48C9B0",
+            font=("Arial", 9)
+        )
+        refresh_btn.place(x=730, y=80)
 
-        self.entry.bind("<Return>",self.search_bind)
-
-        self.transactions_window.protocol("WM_DELETE_WINDOW",self.close_connection)
+        self.transactions_window.protocol("WM_DELETE_WINDOW", self.close_connection)
 
     def tree_view(self):
         style = ttk.Style()
         style.theme_use("default")
-
         style.configure("Treeview",
                         background="White",
                         foreground="Black",
                         fieldbackground="White",
-                        rowheight=30)
-
+                        rowheight=28)
         style.configure("Treeview.Heading",
                         background="#548DCF",
                         foreground="White",
-                        font=("Arial", 12, "bold"),
-                        height=10)
+                        font=("Arial", 11, "bold"))
 
-        self.table = ttk.Treeview(self.transactions_window,
-                             columns=("transaction_id", "products_id","user_id", "type", "unit_price", "quantity", "total_amount",
-                                      "date"), show="headings")
-        self.table.heading("transaction_id", text="Transaction ID")
-        self.table.column("transaction_id", width=100)
+        self.table = ttk.Treeview(
+            self.transactions_window,
+            columns=("transaction_id", "products_id", "user_id", "type", "unit_price",
+                     "quantity", "total_amount", "date"),
+            show="headings"
+        )
 
-        self.table.heading("products_id", text="Product ID")
-        self.table.column("products_id", width=100)
+        headings = {
+            "transaction_id": "Transaction ID",
+            "products_id": "Product ID",
+            "user_id": "User ID",
+            "type": "Type (purchase/sale)",
+            "unit_price": "Unit Price",
+            "quantity": "Quantity",
+            "total_amount": "Total",
+            "date": "Date"
+        }
 
-        self.table.heading("user_id", text="User ID")
-        self.table.column("user_id", width=100)
+        widths = {
+            "transaction_id": 100,
+            "products_id": 100,
+            "user_id": 100,
+            "type": 140,
+            "unit_price": 100,
+            "quantity": 80,
+            "total_amount": 100,
+            "date": 120
+        }
 
-        self.table.heading("type", text="Type (purchase/sale)")
-        self.table.column("type", width=150)
+        for col in headings:
+            self.table.heading(col, text=headings[col])
+            self.table.column(col, width=widths[col])
 
-        self.table.heading("unit_price", text="Unit Price")
-        self.table.column("unit_price", width=120)
-
-        self.table.heading("quantity", text="Quantity")
-        self.table.column("quantity", width=100)
-
-        self.table.heading("total_amount", text="Total")
-        self.table.column("total_amount", width=120)
-
-        self.table.heading("date", text="Date")
-        self.table.column("date", width=150)
-
-        self.table.place(x=70, y=250, width=1750, height=700)
+        self.table.place(x=60, y=230, width=1180, height=500)
 
         self.scroll = Scrollbar(self.content_frame, orient="vertical", command=self.table.yview)
         self.table.configure(yscrollcommand=self.scroll.set)
-        self.scroll.place(x=1770, y=150, height=700)
+        self.scroll.place(x=1220, y=160, height=540)
 
         self.load_transactions()
 
@@ -117,7 +162,7 @@ class TransactionsManager:
             self.table.delete(item)
 
         for row in rows:
-            self.table.insert("","end",values=row)
+            self.table.insert("", "end", values=row)
 
     def open_add_win(self):
         self.add_window()

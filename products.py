@@ -4,7 +4,7 @@ import mysql.connector
 from tkinter import messagebox
 
 class ProductsManager:
-    def __init__(self,root):
+    def __init__(self, root):
 
         self.dbcon = mysql.connector.connect(
             host="localhost",
@@ -20,38 +20,47 @@ class ProductsManager:
     def main_window(self):
         self.products_window = Toplevel()
         self.products_window.title("Desktop Inventory Management System")
-        self.products_window.geometry("1920x1080")
+        self.products_window.geometry("1300x800")  # 🔹 Reduced window size
         self.products_window.config(bg="#1E1E1E")
 
-        heading = Label(self.products_window, text="Products", bg="#1E1E1E", fg="White", font=("Georgia",50,"bold"))
-        heading.place(x=750, y=10)
-        
-        self.main_frame = Frame(self.products_window,bg="#F1F0F0")
-        self.main_frame.place(x=50, y=100, width=1800, height=900)
+        heading = Label(self.products_window, text="Products", bg="#1E1E1E", fg="White", font=("Georgia", 42, "bold"))
+        heading.place(x=520, y=10)
 
-        sub_heading = Label(self.main_frame, text="Welcome, Admin!", bg="#F1F0F0", fg="#1E1E1E", font=("TkDefaultFont",30,"bold"))
+        self.main_frame = Frame(self.products_window, bg="#F1F0F0")
+        self.main_frame.place(x=30, y=80, width=1240, height=670)
+
+        sub_heading = Label(self.main_frame, text="Welcome, Admin!", bg="#F1F0F0", fg="#1E1E1E",
+                            font=("TkDefaultFont", 24, "bold"))
         sub_heading.place(x=20, y=10)
 
-        underline = Frame(self.main_frame, bg="#1E1E1E", height=4, width=1800)
-        underline.place(x=0,y=70)
+        underline = Frame(self.main_frame, bg="#1E1E1E", height=3, width=1240)
+        underline.place(x=0, y=55)
 
-        add_prdct = Button(self.main_frame, text="Add Product",command=self.open_add_win,relief=FLAT, bg="#3962A3", fg="White",activebackground="#3962A3",activeforeground="White",font=("Arial",10))
-        add_prdct.place(x=30, y=100)
-        updte_prdct = Button(self.main_frame, text="Update Product",command=self.update_window,relief=FLAT, bg="#359E0B", fg="White",activebackground="#359E0B",activeforeground="White",font=("Arial",10))
-        updte_prdct.place(x=140, y=100)
-        del_prdct = Button(self.main_frame, text="Delete Product",command=self.delete_prdct,relief=FLAT, bg="#F42325", fg="White",activebackground="#F42325",activeforeground="White",font=("Arial",10))
-        del_prdct.place(x=270, y=100)
+        add_prdct = Button(self.main_frame, text="Add Product", command=self.open_add_win, relief=FLAT,
+                           bg="#3962A3", fg="White", activebackground="#3962A3", activeforeground="White",
+                           font=("Arial", 9))
+        add_prdct.place(x=30, y=80)
 
-        search_lbl = Label(self.main_frame,text="Search", bg="#F1F0F0",fg="#1E1E1E",font=("Arial",13,"bold"))
-        search_lbl.place(x=400, y=102)
+        updte_prdct = Button(self.main_frame, text="Update Product", command=self.update_window, relief=FLAT,
+                             bg="#359E0B", fg="White", activebackground="#359E0B", activeforeground="White",
+                             font=("Arial", 9))
+        updte_prdct.place(x=140, y=80)
 
-        self.entry = Entry(self.main_frame,width=25,font=("Arial",13))
-        self.entry.place(x=470,y=103)
+        del_prdct = Button(self.main_frame, text="Delete Product", command=self.delete_prdct, relief=FLAT,
+                           bg="#F42325", fg="White", activebackground="#F42325", activeforeground="White",
+                           font=("Arial", 9))
+        del_prdct.place(x=270, y=80)
 
-        self.entry.bind("<Return>",self.search_bind)
+        search_lbl = Label(self.main_frame, text="Search", bg="#F1F0F0", fg="#1E1E1E", font=("Arial", 11, "bold"))
+        search_lbl.place(x=400, y=82)
 
-        refresh_btn = Button(self.main_frame, text="⟳ Refresh",command=self.refresh_table, bg="#2ECC71", fg="white", relief=FLAT,activebackground="#48C9B0", font=("Arial", 10))
-        refresh_btn.place(x=770,y=100)
+        self.entry = Entry(self.main_frame, width=25, font=("Arial", 12))
+        self.entry.place(x=470, y=83)
+        self.entry.bind("<Return>", self.search_bind)
+
+        refresh_btn = Button(self.main_frame, text="⟳ Refresh", command=self.refresh_table, bg="#2ECC71", fg="white",
+                             relief=FLAT, activebackground="#48C9B0", font=("Arial", 9))
+        refresh_btn.place(x=770, y=80)
 
     def setup_treeview(self):
         style = ttk.Style()
@@ -61,50 +70,55 @@ class ProductsManager:
                         background="White",
                         foreground="Black",
                         fieldbackground="White",
-                        rowheight=30)
+                        rowheight=28)
 
         style.configure("Treeview.Heading",
                         background="#548DCF",
                         foreground="White",
-                        font=("Arial",12,"bold"),
-                        height=10)
-
+                        font=("Arial", 11, "bold"))
 
         self.table = ttk.Treeview(
-        self.main_frame,
-        columns=("products_id", "name", "catagory_id", "supplier_id", "price", "quantity"),
-        show="headings"
-    )
-
+            self.main_frame,
+            columns=("products_id", "name", "catagory_id", "supplier_id", "price", "quantity"),
+            show="headings"
+        )
 
         self.table.heading("products_id", text="Product ID")
-        self.table.column("products_id", width=120, anchor="center")
+        self.table.column("products_id", width=100, anchor="center")
 
         self.table.heading("name", text="Product Name")
-        self.table.column("name", width=250, anchor="w")
+        self.table.column("name", width=220, anchor="w")
 
         self.table.heading("catagory_id", text="Category ID")
-        self.table.column("catagory_id", width=150, anchor="center")
+        self.table.column("catagory_id", width=120, anchor="center")
 
         self.table.heading("supplier_id", text="Supplier ID")
-        self.table.column("supplier_id", width=150, anchor="center")
+        self.table.column("supplier_id", width=120, anchor="center")
 
         self.table.heading("price", text="Price")
-        self.table.column("price", width=120, anchor="center")
+        self.table.column("price", width=100, anchor="center")
 
         self.table.heading("quantity", text="Quantity")
-        self.table.column("quantity", width=120, anchor="center")
+        self.table.column("quantity", width=100, anchor="center")
 
-
-        self.table.place(x=20, y=150, width=1750, height=700)
+        self.table.place(x=20, y=150, width=1180, height=500)
 
         self.scroll = Scrollbar(self.main_frame, orient="vertical", command=self.table.yview)
         self.table.configure(yscrollcommand=self.scroll.set)
-        self.scroll.place(x=1770, y=150, height=700)
+        self.scroll.place(x=1200, y=150, height=500)
 
         self.load_products()
 
     def load_products(self):
+        cursor = self.dbcon.cursor()
+        cursor.execute("select * from products")
+        rows = cursor.fetchall()
+
+        for item in self.table.get_children():
+            self.table.delete(item)
+
+        for row in rows:
+            self.table.insert("", "end", values=row)
         cursor = self.dbcon.cursor()
         cursor.execute("select * from products")
         rows = cursor.fetchall()
@@ -454,17 +468,3 @@ class ProductsManager:
         
     def refresh_table(self):
         self.load_products()
-    
-
-
-
-            
-
-
-
-
-
- #   lbl = Label(content_frame, text="Item code ", bg="#E0E0E0", fg="#1E1E1E", font=("TkDefaultFont",13)).place(x=30, y=120)
- #   lbl2 = Label(content_frame, text="Item name ", bg="#E0E0E0", fg="#1E1E1E", font=("TkDefaultFont",13)).place(x=30, y=135)
-  #  lbl3 = Label(content_frame, text="Item catagory ", bg="#E0E0E0", fg="#1E1E1E", font=("TkDefaultFont",13)).place(x=30, y=120)
-  #  lbl4 = Label(content_frame, text="Item code ", bg="#E0E0E0", fg="#1E1E1E", font=("TkDefaultFont",13)).place(x=30, y=120)

@@ -5,8 +5,7 @@ from tkinter import messagebox
 import re
 
 class Suppliermanager:
-    def __init__(self,root):
-
+    def __init__(self, root):
         self.dbcon = mysql.connector.connect(
             host="localhost",
             user="root",
@@ -21,45 +20,69 @@ class Suppliermanager:
     def create_window(self):
         self.suppliers_window = Toplevel()
         self.suppliers_window.title("Desktop Inventory Management System")
-        self.suppliers_window.geometry("1920x1080")
+        self.suppliers_window.geometry("1300x800")  # 🔹 Resized window
         self.suppliers_window.config(bg="#1E1E1E")
 
-        heading = Label(self.suppliers_window, text="Suppliers", bg="#1E1E1E", fg="White", font=("Georgia",50,"bold"))
-        heading.place(x=750, y=10)
+        heading = Label(self.suppliers_window, text="Suppliers",
+                        bg="#1E1E1E", fg="White",
+                        font=("Georgia", 42, "bold"))
+        heading.place(x=500, y=10)
 
-        self.content_frame = Frame(self.suppliers_window,bg="#F1F0F0")
-        self.content_frame.place(x=50, y=100, width=1800, height=900)
+        self.content_frame = Frame(self.suppliers_window, bg="#F1F0F0")
+        self.content_frame.place(x=30, y=80, width=1240, height=670)
 
-        sub_heading = Label(self.content_frame, text="Welcome, Admin!", bg="#F1F0F0", fg="#1E1E1E", font=("TkDefaultFont",30,"bold"))
+        sub_heading = Label(self.content_frame, text="Welcome, Admin!",
+                            bg="#F1F0F0", fg="#1E1E1E",
+                            font=("TkDefaultFont", 24, "bold"))
         sub_heading.place(x=20, y=10)
 
-        underline = Frame(self.content_frame, bg="#1E1E1E", height=4, width=1800)
-        underline.place(x=0,y=70)
+        underline = Frame(self.content_frame, bg="#1E1E1E", height=3, width=1240)
+        underline.place(x=0, y=55)
 
-        add_sup = Button(self.content_frame, text="Add Supplier",command=self.open_add_win,relief=FLAT, bg="#3962A3", fg="White",activebackground="#3962A3",activeforeground="White",font=("Arial",10))
-        add_sup.place(x=30, y=100)
-        updte_sup = Button(self.content_frame,command=self.open_update_win, text="Update Supplier",relief=FLAT, bg="#359E0B", fg="White",activebackground="#359E0B",activeforeground="White",font=("Arial",10))
-        updte_sup.place(x=135, y=100)
-        del_sup = Button(self.content_frame, text="Delete Supplier",command=self.delete_sup,relief=FLAT, bg="#F42325", fg="White",activebackground="#F42325",activeforeground="White",font=("Arial",10))
-        del_sup.place(x=270, y=100)
+        # 🔹 Buttons
+        add_sup = Button(self.content_frame, text="Add Supplier",
+                         command=self.open_add_win, relief=FLAT,
+                         bg="#3962A3", fg="White",
+                         activebackground="#3962A3",
+                         activeforeground="White",
+                         font=("Arial", 9))
+        add_sup.place(x=30, y=80)
 
-        search_sup = Label(self.content_frame,text="Search", bg="#F1F0F0",fg="#1E1E1E",font=("Arial",13,"bold"))
-        search_sup.place(x=400, y=102)
+        updte_sup = Button(self.content_frame, text="Update Supplier",
+                           command=self.open_update_win, relief=FLAT,
+                           bg="#359E0B", fg="White",
+                           activebackground="#359E0B",
+                           activeforeground="White",
+                           font=("Arial", 9))
+        updte_sup.place(x=140, y=80)
 
-        def refresh_table():
-            self.load_suppliers()
+        del_sup = Button(self.content_frame, text="Delete Supplier",
+                         command=self.delete_sup, relief=FLAT,
+                         bg="#F42325", fg="White",
+                         activebackground="#F42325",
+                         activeforeground="White",
+                         font=("Arial", 9))
+        del_sup.place(x=270, y=80)
 
-        refresh_btn = Button(self.content_frame, text="⟳ Refresh",command=refresh_table, bg="#2ECC71", fg="white", relief=FLAT,activebackground="#48C9B0", font=("Arial", 10))
-        refresh_btn.place(x=770,y=100)
+        search_sup = Label(self.content_frame, text="Search",
+                           bg="#F1F0F0", fg="#1E1E1E",
+                           font=("Arial", 11, "bold"))
+        search_sup.place(x=400, y=82)
 
-        self.entry = Entry(self.content_frame,width=25,font=("Arial",13))
-        self.entry.bind("<Return>",self.search_bind)
-        self.entry.place(x=470,y=103)
+        self.entry = Entry(self.content_frame, width=25, font=("Arial", 12))
+        self.entry.bind("<Return>", self.search_bind)
+        self.entry.place(x=470, y=83)
 
-        self.suppliers_window.protocol("WM_DELETE_WINDOW",self.on_close)
+        refresh_btn = Button(self.content_frame, text="⟳ Refresh",
+                             command=self.load_suppliers,
+                             bg="#2ECC71", fg="white",
+                             relief=FLAT, activebackground="#48C9B0",
+                             font=("Arial", 9))
+        refresh_btn.place(x=770, y=80)
+
+        self.suppliers_window.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def setup_treeview(self):
-
         style = ttk.Style()
         style.theme_use("default")
 
@@ -67,27 +90,30 @@ class Suppliermanager:
                         background="White",
                         foreground="Black",
                         fieldbackground="White",
-                        rowheight=30)
+                        rowheight=28)
 
         style.configure("Treeview.Heading",
                         background="#548DCF",
                         foreground="White",
-                        font=("Arial",12,"bold"),
-                        height=10)
+                        font=("Arial", 11, "bold"))
 
-        self.table = ttk.Treeview(self.content_frame, columns=("supplier_id", "name", "contact_info"), show="headings")
+        self.table = ttk.Treeview(self.content_frame,
+                                  columns=("supplier_id", "name", "contact_info"),
+                                  show="headings")
+
         self.table.heading("supplier_id", text="Supplier ID")
         self.table.heading("name", text="Supplier Name")
         self.table.heading("contact_info", text="Contact Info")
-        self.table.column("supplier_id", width=200, anchor="w")
-        self.table.column("name", width=400, anchor="w")
-        self.table.column("contact_info", width=600, anchor="w")
-        self.table.place(x=20, y=150, width=1750, height=700)
+
+        self.table.column("supplier_id", width=150, anchor="center")
+        self.table.column("name", width=300, anchor="w")
+        self.table.column("contact_info", width=500, anchor="w")
+
+        self.table.place(x=20, y=150, width=1180, height=480)
 
         self.scrollbar = Scrollbar(self.content_frame, orient="vertical", command=self.table.yview)
         self.table.configure(yscrollcommand=self.scrollbar.set)
-        self.scrollbar.place(x=1770, y=150, height=700)
-
+        self.scrollbar.place(x=1200, y=150, height=480)
 
         self.load_suppliers()
 
@@ -95,12 +121,13 @@ class Suppliermanager:
         cursor = self.dbcon.cursor()
         cursor.execute("select * from suppliers")
         rows = cursor.fetchall()
+        cursor.close()
 
         for item in self.table.get_children():
             self.table.delete(item)
 
         for row in rows:
-            self.table.insert("","end",values=row)
+            self.table.insert("", "end", values=row)
 
     def open_add_win(self):
         self.add_window()

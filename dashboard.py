@@ -3,76 +3,6 @@ from tkinter import ttk
 import mysql.connector
 from tkinter import messagebox
 
-# class Dashboard:
-#             def __init__(self, root):
-#                 self.dbcon = mysql.connector.connect(
-#                     host="localhost",
-#                     user="root",
-#                     password="root",
-#                     database="Inventory_manager_db"
-#                 )
-#
-#                 self.root = root
-#                 self.main_window()
-#
-#             def main_window(self):
-#                 dashboard_window = Toplevel()
-#                 dashboard_window.title("Desktop Inventory Management System")
-#                 dashboard_window.geometry("1920x1080")
-#                 dashboard_window.config(bg="#1E1E1E")
-#
-#                 heading = Label(dashboard_window, text="Dashboard", bg="#1E1E1E", fg="White", font=("Georgia", 50, "bold"))
-#                 heading.place(x=750, y=10)
-#
-#                 main_frame = Frame(dashboard_window, bg="#252526")
-#                 main_frame.place(x=50, y=100, width=1800, height=900)
-#
-#                 sub_heading = Label(main_frame, text="Welcome, Admin!", bg="#252526", fg="White", font=("Arial", 30, "bold"))
-#                 sub_heading.place(x=20, y=10)
-#
-#                 underline = Frame(main_frame, bg="#1E1E1E", height=4, width=1800)
-#                 underline.place(x=0, y=70)
-#
-#                 self.content_frame = Frame(main_frame, bg="White")
-#                 self.content_frame.place(x=20, y=100,width=1750, height=780)
-#
-#                 add_prdct = Button(self.content_frame, text="Add Product", relief="flat",
-#                                    bg="#3962A3", fg="White", activebackground="#3962A3", activeforeground="White",
-#                                    font=("Arial", 10))
-#                 add_prdct.place(x=30, y=30)
-#
-#                 add_tran = Button(self.content_frame, text="Add Transaction", relief="flat",
-#                                   bg="#359E0B", fg="White",
-#                                   activebackground="#359E0B", activeforeground="White", font=("Arial", 10))
-#                 add_tran.place(x=140, y=30)
-#
-#                 view_rprts = Button(self.content_frame, text="View Reports",relief="flat",bg="#DBA919", fg="White",
-#                                     activebackground="#DBA919",activeforeground="White",font=("Arial",10))
-#                 view_rprts.place(x=270,y=30)
-#
-#                 users = Button(self.content_frame, text="Users",relief="flat",bg="#C07783", fg="White",
-#                                     activebackground="#C07783",activeforeground="White",font=("Arial",10))
-#                 users.place(x=386,y=30,width=70)
-#
-#                 search_lbl = Label(self.content_frame, text="Search", bg="white", fg="Black",
-#                                    font=("Arial", 13, "bold"))
-#                 search_lbl.place(x=500, y=32)
-#
-#                 self.entry = Entry(self.content_frame, width=25, font=("Arial", 13), bg="#FBF7EA",fg="Black")
-#                 self.entry.place(x=580, y=33)
-#
-#                 refresh_btn = Button(self.content_frame, text="⟳ Refresh", bg="#2ECC71",
-#                                      fg="white", relief="flat", activebackground="#48C9B0", font=("Arial", 10))
-#                 refresh_btn.place(x=850, y=30)
-#
-#             def stats(self):
-#                 frame = Frame(self.content_frame,bg="#E8E8E8")
-#                 frame.place(x=30, y=100, height=490, width=440)
-from tkinter import *
-from tkinter import ttk
-import mysql.connector
-from tkinter import messagebox
-
 
 class Dashboard:
     def __init__(self, root):
@@ -85,7 +15,9 @@ class Dashboard:
 
         self.root = root
         self.main_window()
+        self.treeview()
         self.stats()
+        self.load_latest_trans()
 
     def main_window(self):
         dashboard_window = Toplevel()
@@ -118,7 +50,7 @@ class Dashboard:
         underline.place(x=0, y=60)
 
         self.content_frame = Frame(main_frame, bg="White")
-        self.content_frame.place(x=0, y=80, width=1200, height=500)
+        self.content_frame.place(x=0, y=80, width=1140, height=500)
 
         add_prdct = Button(
             self.content_frame, text="Add Product", relief="flat",
@@ -179,9 +111,85 @@ class Dashboard:
         )
         refresh_btn.place(x=940, y=32, width=100, height=32)
 
+        stats_lbl = Label(
+            self.content_frame,
+            text="Stats",
+            bg="White",
+            fg="Black",
+            font=("Georgia", 25, "bold")
+        )
+        stats_lbl.place(x=30, y=85)
+
+        latest_lbl = Label(
+            self.content_frame,
+            text="Latest transactions",
+            bg="White",
+            fg="Black",
+            font=("Georgia", 25, "bold")
+        )
+        latest_lbl.place(x=400, y=85)
+
+    def treeview(self):
+        style = ttk.Style()
+        style.theme_use("default")
+
+        style.configure("Treeview",
+                        background="White",
+                        foreground="Black",
+                        fieldbackground="White",
+                        rowheight=30)
+
+        style.configure("Treeview.Heading",
+                        background="#548DCF",
+                        foreground="White",
+                        font=("Arial", 12, "bold"),
+                        height=10)
+
+        self.table = ttk.Treeview(
+        self.content_frame,
+        columns=("transaction_id", "products_id", "type", "quantity", "total_amount", "date"),
+            show="headings"
+            )
+
+        self.table.heading("transaction_id", text="ID")
+        self.table.column("transaction_id", width=80, anchor="center")
+
+        self.table.heading("products_id", text="Product")
+        self.table.column("products_id", width=120, anchor="center")
+
+        self.table.heading("type", text="Type")
+        self.table.column("type", width=100, anchor="center")
+
+        self.table.heading("quantity", text="Quantity")
+        self.table.column("quantity", width=80, anchor="center")
+
+        self.table.heading("total_amount", text="Total")
+        self.table.column("total_amount", width=100, anchor="center")
+
+        self.table.heading("date", text="Date")
+        self.table.column("date", width=120, anchor="center")
+
+        self.table.place(x=400, y=150, width=710, height=270)
+
+    def load_latest_trans(self):
+        cursor = self.dbcon.cursor()
+        cursor.execute(
+            "SELECT transaction_id, products_id, type, quantity, total_amount, `date` FROM transactions ORDER BY transaction_id DESC LIMIT 3")
+        rows = cursor.fetchall()
+        cursor.close()
+
+        for item in self.table.get_children():
+            self.table.delete(item)
+
+        if not rows:
+            self.table.insert("", "end", values=("No transactions", "", "", "", "", ""))
+
+        for row in rows:
+            self.table.insert("","end",values=row)
+
     def stats(self):
         frame = Frame(self.content_frame, bg="#E8E8E8")
-        frame.place(x=30, y=100, height=320, width=350)
+        frame.place(x=30, y=150, height=270, width=350)
 
         try:
             cursor = self.dbcon.cursor()
@@ -237,8 +245,8 @@ class Dashboard:
             total_revenue = Label(frame,text="Total Revenue :",bg="#E8E8E8",fg="Black",font=("Arial", 13, "bold"))
             total_revenue.place(x=20,y=140)
 
-            t_ttl = Label(frame, text=f"${rev}", bg="#E8E8E8", fg="#8D6F64", font=("Arial", 13, "bold"))
-            t_ttl.place(x=150, y=141)
+            rev_lbl = Label(frame, text=f"${rev}", bg="#E8E8E8", fg="#8D6F64", font=("Arial", 13, "bold"))
+            rev_lbl.place(x=150, y=141)
 
         finally:
             cursor.close()
