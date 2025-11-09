@@ -5,6 +5,7 @@ from products import ProductsManager
 from suppliers import Suppliermanager
 from transactions import TransactionsManager
 from catagories import CatagoryManager
+from reports import ReportsManager
 
 def logged_in_window():
     window2 = Toplevel()
@@ -63,7 +64,10 @@ def logged_in_window():
     img5 = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\REPORTS.jpg")
     report_img = ImageTk.PhotoImage(img5)
 
-    report_but = Button(content_frame,text="Reports",fg="Black",bg="#BF9031",font=("Georgia", 10, "bold"), image=report_img ,compound=TOP,relief=FLAT,activebackground="White",activeforeground="Black",bd=0)
+    def open_reports():
+        ReportsManager(window2)
+
+    report_but = Button(content_frame,text="Reports",command=open_reports,fg="Black",bg="#BF9031",font=("Georgia", 10, "bold"), image=report_img ,compound=TOP,relief=FLAT,activebackground="White",activeforeground="Black",bd=0)
     report_but.image = report_img
     report_but.place(x=270, y=300)
 

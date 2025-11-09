@@ -75,7 +75,7 @@ login_but.place(x=770, y=550)
 clear_but = Button(window, command=clear_fields, text="Clear", font=("Georgia", 10, "bold"),
                    fg="White", bg="#3A3D41", relief="flat", width=15, height=2,
                    activebackground="#2D2D30", activeforeground="White")
-clear_but.place(x=1009, y=550)
+clear_but.place(x=1000, y=550)
 
 window.protocol("WM_DELETE_WINDOW", lambda: (dbcon.close(), window.destroy()))
 

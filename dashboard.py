@@ -1,8 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 import mysql.connector
-from tkinter import messagebox
-
 
 class Dashboard:
     def __init__(self, root):

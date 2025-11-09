@@ -86,7 +86,6 @@ class CatagoryManager:
     def set_up_treeview(self):
         style = ttk.Style()
         style.theme_use("default")
-
         style.configure("Treeview",
                         background="White",
                         foreground="Black",
