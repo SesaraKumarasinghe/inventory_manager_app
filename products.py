@@ -24,14 +24,14 @@ class ProductsManager:
         self.products_window.config(bg="#111828")
 
         heading = Label(self.products_window, text="Products", bg="#111828", fg="#F3F4F6", font=("Segoe UI", 42, "bold"))
-        heading.place(x=520, y=10)
+        heading.place(x=520, y=5)
 
         self.main_frame = Frame(self.products_window, bg="#0B1220")
         self.main_frame.place(x=30, y=80, width=1240, height=670)
 
         sub_heading = Label(self.main_frame, text="Welcome, Admin!", bg="#0B1220", fg="#8A95B8",
                             font=("Segoe UI", 24, "bold"))
-        sub_heading.place(x=20, y=10)
+        sub_heading.place(x=20, y=7)
 
         underline = Frame(self.main_frame, bg="#2ED3B7", height=3, width=1240)
         underline.place(x=0, y=55)
@@ -40,7 +40,7 @@ class ProductsManager:
         self.content_panel.place(x=0, y=80, width=1240, height=590)
 
         panel_heading = Label(self.content_panel, text="Manage Products", bg="#151F32", fg="#F3F4F6",
-                              font=("Segoe UI", 22, "bold"))
+                              font=("Segoe UI", 19, "bold"))
         panel_heading.place(x=20, y=0)
 
         controls_frame = Frame(self.content_panel, bg="#151F32")
@@ -90,50 +90,46 @@ class ProductsManager:
                         foreground="#F3F4F6",
                         fieldbackground="#151F32",
                         rowheight=28,
-                        bordercolor="#0B1220",
-                        relief="flat")
+                        borderwidth=1,
+                        relief="solid",
+                        bordercolor="#F3F4F6",
+                        lightcolor="#151F32",
+                        darkcolor="#151F32",
+                        highlightthickness=0)
 
         style.configure("Treeview.Heading",
                         background="#2ED3B7",
                         foreground="#0B1220",
                         font=("Segoe UI", 11, "bold"))
+
         style.map("Treeview",
                   background=[("selected", "#2ED3B7")],
                   foreground=[("selected", "#0B1220")])
 
+        table_container = Frame(self.content_panel, bg="#151F32")
+        table_container.place(x=20, y=120, width=1200, height=450)
+
         self.table = ttk.Treeview(
-            self.content_panel,
+            table_container,
             columns=("products_id", "name", "catagory_id", "supplier_id", "price", "quantity"),
             show="headings"
         )
 
-        self.table.heading("products_id", text="Product ID")
-        self.table.column("products_id", width=100, anchor="center")
+        self.table.place(x=0, y=0, width=1150, height=450)
 
-        self.table.heading("name", text="Product Name")
-        self.table.column("name", width=220, anchor="w")
-
-        self.table.heading("catagory_id", text="Category ID")
-        self.table.column("catagory_id", width=120, anchor="center")
-
-        self.table.heading("supplier_id", text="Supplier ID")
-        self.table.column("supplier_id", width=120, anchor="center")
-
-        self.table.heading("price", text="Price")
-        self.table.column("price", width=100, anchor="center")
-
-        self.table.heading("quantity", text="Quantity")
-        self.table.column("quantity", width=100, anchor="center")
-
-        table_container = Frame(self.content_panel, bg="#151F32")
-        table_container.place(x=20, y=120, width=1200, height=450)
-
-        self.table.place(in_=table_container, x=0, y=0, width=1150, height=450)
-
-        self.scroll = Scrollbar(table_container, orient="vertical", command=self.table.yview, bg="#151F32",
-                                troughcolor="#0B1220", activebackground="#2ED3B7", bd=0, highlightthickness=0)
-        self.table.configure(yscrollcommand=self.scroll.set)
+        self.scroll = Scrollbar(table_container, orient="vertical",
+                                command=self.table.yview)
         self.scroll.place(x=1150, y=0, height=450)
+
+        self.table.configure(yscrollcommand=self.scroll.set)
+
+        # Headings
+        self.table.heading("products_id", text="Product ID")
+        self.table.heading("name", text="Product Name")
+        self.table.heading("catagory_id", text="Category ID")
+        self.table.heading("supplier_id", text="Supplier ID")
+        self.table.heading("price", text="Price")
+        self.table.heading("quantity", text="Quantity")
 
         self.load_products()
 
@@ -161,7 +157,7 @@ class ProductsManager:
         self.add_window()
 
     def add_window(self):
-        self.add_win_popup = Toplevel()
+        self.add_win_popup = Toplevel(self.root)
         self.add_win_popup.geometry("500x500")
         self.add_win_popup.config(bg="#111828")
 

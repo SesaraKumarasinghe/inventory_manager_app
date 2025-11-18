@@ -202,7 +202,7 @@ class TransactionsManager:
         self.add_window()
 
     def add_window(self):
-        self.add_win_popup = Toplevel()
+        self.add_win_popup = Toplevel(self.root)
         self.add_win_popup.geometry("500x500")
         self.add_win_popup.config(bg="#111828")
 

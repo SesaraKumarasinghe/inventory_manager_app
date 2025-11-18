@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 import mysql.connector
+from products import ProductsManager
+from transactions import TransactionsManager
+from reports import ReportsManager
 
 class Dashboard:
     def __init__(self, root):
@@ -30,7 +33,7 @@ class Dashboard:
             fg="#F3F4F6",
             font=("Segoe UI", 40, "bold")
         )
-        heading.place(x=450, y=10)
+        heading.place(x=450, y=5)
 
         main_frame = Frame(dashboard_window, bg="#0B1220")
         main_frame.place(x=30, y=100, width=1140, height=560)
@@ -42,7 +45,7 @@ class Dashboard:
             fg="#8A95B8",
             font=("Segoe UI", 26, "bold")
         )
-        sub_heading.place(x=20, y=10)
+        sub_heading.place(x=20, y=7)
 
         underline = Frame(main_frame, bg="#2ED3B7", height=3, width=1140)
         underline.place(x=0, y=60)
@@ -51,15 +54,15 @@ class Dashboard:
         self.content_frame.place(x=0, y=80, width=1140, height=500)
 
         add_prdct = Button(
-            self.content_frame, text="Add Product", relief="flat",
-            bg="#2ED3B7", fg="#0B1220",
+            self.content_frame, text="Add Product", relief="flat",command=self.add_products
+        ,bg="#2ED3B7", fg="#0B1220",
             activebackground="#31E3BF", activeforeground="#0B1220",
             font=("Segoe UI", 11, "bold")
         )
         add_prdct.place(x=30, y=30, width=120, height=35)
 
         add_tran = Button(
-            self.content_frame, text="Add Transaction", relief="flat",
+            self.content_frame, text="Add Transaction", relief="flat",command=self.add_tran,
             bg="#1C2A43", fg="#F3F4F6",
             activebackground="#223555", activeforeground="#2ED3B7",
             font=("Segoe UI", 11, "bold")
@@ -67,7 +70,7 @@ class Dashboard:
         add_tran.place(x=170, y=30, width=150, height=35)
 
         view_rprts = Button(
-            self.content_frame, text="View Reports", relief="flat",
+            self.content_frame, text="View Reports", relief="flat",command=self.open_reports,
             bg="#151F32", fg="#2ED3B7",
             activebackground="#1C2A43", activeforeground="#31E3BF",
             font=("Segoe UI", 11, "bold")
@@ -258,6 +261,15 @@ class Dashboard:
 
         finally:
             cursor.close()
+
+    def add_products(self):
+        ProductsManager(self.root)
+
+    def add_tran(self):
+        TransactionsManager(self.root)
+
+    def open_reports(self):
+        ReportsManager(self.root)
 
 
 

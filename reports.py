@@ -28,7 +28,7 @@ class ReportsManager:
         heading = Label(self.reports_win, text="Reports",
                         bg="#111828", fg="#F3F4F6",
                         font=("Segoe UI", 42, "bold"))
-        heading.place(x=500, y=10)
+        heading.place(x=500, y=5)
 
         self.content_frame = Frame(self.reports_win, bg="#0B1220")
         self.content_frame.place(x=30, y=80, width=1240, height=670)
@@ -36,7 +36,7 @@ class ReportsManager:
         sub_heading = Label(self.content_frame, text="Welcome, Admin!",
                             bg="#0B1220", fg="#8A95B8",
                             font=("Segoe UI", 24, "bold"))
-        sub_heading.place(x=20, y=10)
+        sub_heading.place(x=20, y=7)
 
         underline = Frame(self.content_frame, bg="#2ED3B7", height=3, width=1240)
         underline.place(x=0, y=55)
