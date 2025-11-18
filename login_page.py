@@ -22,25 +22,25 @@ window.title("Desktop Inventory Management System")
 img = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\screenshot3.png")
 icon = ImageTk.PhotoImage(img)
 window.iconphoto(True, icon)
-window.config(bg="#1E1E1E")
+window.config(bg="#111828")
 
-login_frame = Frame(window, bg="#252526", bd=5, relief="flat")
+login_frame = Frame(window, bg="#0B1220", bd=5, relief="flat")
 login_frame.place(x=715, y=150, width=500, height=510)
 
 photo = PhotoImage(file="C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\screenshot3.png")
-log_label = Label(window, text="DIM System", fg="#FFFFFF", bg="#252526", font=("Georgia", 50, "bold"),
+log_label = Label(window, text="DIM System", fg="#8A95B8", bg="#0B1220", font=("Georgia", 50, "bold"),
                   image=photo, compound="top")
 log_label.image = photo
 log_label.place(x=750, y=200)
 
-username_label = Label(window, text="Username :", fg="#CCCCCC", bg="#252526", font=("Georgia", 18))
+username_label = Label(window, text="Username :", fg="#8A95B8", bg="#0B1220", font=("Georgia", 18))
 username_label.place(x=760, y=420)
-password_label = Label(window, text="Password  :", fg="#CCCCCC", bg="#252526", font=("Georgia", 18))
+password_label = Label(window, text="Password  :", fg="#8A95B8", bg="#0B1220", font=("Georgia", 18))
 password_label.place(x=760, y=470)
 
-user_entry = Entry(window, font=("Arial", 10, "bold"), width=35, fg="White", bg="#2D2D30")
+user_entry = Entry(window, font=("Arial", 10, "bold"), width=35, fg="#F3F4F6", bg="#151F32")
 user_entry.place(x=915, y=429)
-password_entry = Entry(window, font=("Arial", 10, "bold"), width=35, fg="White", bg="#2D2D30", show="*")
+password_entry = Entry(window, font=("Arial", 10, "bold"), width=35, fg="#F3F4F6", bg="#151F32", show="*")
 password_entry.place(x=915, y=479)
 
 def login():
@@ -68,13 +68,13 @@ def clear_fields():
     password_entry.delete(0, END)
 
 login_but = Button(window, command=login, text="Login", font=("Georgia", 10, "bold"),
-                   fg="White", bg="#3A3D41", relief="flat", width=15, height=2,
-                   activebackground="#2D2D30", activeforeground="White")
+                   fg="#0B1220", bg="#2ED3B7", relief="flat", width=15, height=2,
+                   activebackground="#31E3BF", activeforeground="#0B1220")
 login_but.place(x=770, y=550)
 
 clear_but = Button(window, command=clear_fields, text="Clear", font=("Georgia", 10, "bold"),
-                   fg="White", bg="#3A3D41", relief="flat", width=15, height=2,
-                   activebackground="#2D2D30", activeforeground="White")
+                   fg="#2ED3B7", bg="#151F32", relief="flat", width=15, height=2,
+                   activebackground="#151F32", activeforeground="#2ED3B7")
 clear_but.place(x=1000, y=550)
 
 window.protocol("WM_DELETE_WINDOW", lambda: (dbcon.close(), window.destroy()))

@@ -19,67 +19,86 @@ class CatagoryManager:
         self.catagory_window = Toplevel(self.root)
         self.catagory_window.title("Desktop Inventory Management System")
         self.catagory_window.geometry("1300x800")  # 🔹 Standard window size
-        self.catagory_window.config(bg="#1E1E1E")
+        self.catagory_window.config(bg="#111828")
 
         heading = Label(self.catagory_window, text="Categories",
-                        bg="#1E1E1E", fg="White",
-                        font=("Georgia", 42, "bold"))
+                        bg="#111828", fg="#F3F4F6",
+                        font=("Segoe UI", 42, "bold"))
         heading.place(x=500, y=10)
 
         self.create_main_frame()
 
     def create_main_frame(self):
-        self.content_frame = Frame(self.catagory_window, bg="#F1F0F0")
+        self.content_frame = Frame(self.catagory_window, bg="#0B1220")
         self.content_frame.place(x=30, y=80, width=1240, height=670)
 
         sub_heading = Label(self.content_frame, text="Welcome, Admin!",
-                            bg="#F1F0F0", fg="#1E1E1E",
-                            font=("TkDefaultFont", 24, "bold"))
+                            bg="#0B1220", fg="#8A95B8",
+                            font=("Segoe UI", 24, "bold"))
         sub_heading.place(x=20, y=10)
 
-        underline = Frame(self.content_frame, bg="#1E1E1E", height=3, width=1240)
+        underline = Frame(self.content_frame, bg="#2ED3B7", height=3, width=1240)
         underline.place(x=0, y=55)
 
-        # 🔹 Buttons
-        add_cat = Button(self.content_frame, text="Add Category",
+        self.panel_frame = Frame(self.content_frame, bg="#151F32")
+        self.panel_frame.place(x=0, y=80, width=1240, height=590)
+
+        panel_heading = Label(self.panel_frame, text="Manage Categories", bg="#151F32", fg="#F3F4F6",
+                              font=("Segoe UI", 22, "bold"))
+        panel_heading.place(x=20, y=0)
+
+        controls_frame = Frame(self.panel_frame, bg="#151F32")
+        controls_frame.place(x=20, y=40, width=1200, height=60)
+
+        actions_wrapper = Frame(controls_frame, bg="#151F32")
+        actions_wrapper.pack(side=LEFT)
+
+        add_cat = Button(actions_wrapper, text="Add Category",
                          command=self.open_add_win, relief=FLAT,
-                         bg="#3962A3", fg="White",
-                         activebackground="#3962A3",
-                         activeforeground="White",
-                         font=("Arial", 9))
-        add_cat.place(x=30, y=80)
+                         bg="#2ED3B7", fg="#0B1220",
+                         activebackground="#31E3BF",
+                         activeforeground="#0B1220",
+                         font=("Segoe UI", 10, "bold"), width=14)
+        add_cat.pack(side=LEFT, padx=5)
 
-        update_cat = Button(self.content_frame, text="Update Category",
+        update_cat = Button(actions_wrapper, text="Update Category",
                             command=self.open_update_win, relief=FLAT,
-                            bg="#359E0B", fg="White",
-                            activebackground="#359E0B",
-                            activeforeground="White",
-                            font=("Arial", 9))
-        update_cat.place(x=140, y=80)
+                            bg="#1C2A43", fg="#F3F4F6",
+                            activebackground="#223555",
+                            activeforeground="#2ED3B7",
+                            font=("Segoe UI", 10, "bold"), width=14)
+        update_cat.pack(side=LEFT, padx=5)
 
-        del_cat = Button(self.content_frame, text="Delete Category",
+        del_cat = Button(actions_wrapper, text="Delete Category",
                          command=self.delete_items, relief=FLAT,
-                         bg="#F42325", fg="White",
-                         activebackground="#F42325",
-                         activeforeground="White",
-                         font=("Arial", 9))
-        del_cat.place(x=270, y=80)
+                         bg="#F472B6", fg="#0B1220",
+                         activebackground="#F688C5",
+                         activeforeground="#0B1220",
+                         font=("Segoe UI", 10, "bold"), width=14)
+        del_cat.pack(side=LEFT, padx=5)
 
-        search_cat = Label(self.content_frame, text="Search",
-                           bg="#F1F0F0", fg="#1E1E1E",
-                           font=("Arial", 11, "bold"))
-        search_cat.place(x=400, y=82)
+        search_wrapper = Frame(controls_frame, bg="#151F32")
+        search_wrapper.pack(side=RIGHT)
 
-        self.search_entry = Entry(self.content_frame, width=25, font=("Arial", 12))
-        self.search_entry.bind("<Return>", self.search_cat_event)
-        self.search_entry.place(x=470, y=83)
-
-        refresh_btn = Button(self.content_frame, text="⟳ Refresh",
+        refresh_btn = Button(search_wrapper, text="⟳ Refresh",
                              command=self.load_catagories,
-                             bg="#2ECC71", fg="white",
-                             relief=FLAT, activebackground="#48C9B0",
-                             font=("Arial", 9))
-        refresh_btn.place(x=770, y=80)
+                             bg="#0B1220", fg="#2ED3B7",
+                             relief=FLAT, activebackground="#1C2A43",
+                             activeforeground="#31E3BF",
+                             font=("Segoe UI", 10, "bold"), width=12)
+        refresh_btn.pack(side=RIGHT, padx=(10, 0))
+
+        self.search_entry = Entry(search_wrapper, width=28, font=("Segoe UI", 12),
+                                  bg="#0B1220", fg="#F3F4F6", insertbackground="#2ED3B7",
+                                  highlightbackground="#2ED3B7", highlightcolor="#2ED3B7",
+                                  relief=FLAT)
+        self.search_entry.bind("<Return>", self.search_cat_event)
+        self.search_entry.pack(side=RIGHT, padx=5)
+
+        search_cat = Label(search_wrapper, text="Search",
+                           bg="#151F32", fg="#F3F4F6",
+                           font=("Segoe UI", 12, "bold"))
+        search_cat.pack(side=RIGHT, padx=5)
 
         self.catagory_window.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -87,17 +106,25 @@ class CatagoryManager:
         style = ttk.Style()
         style.theme_use("default")
         style.configure("Treeview",
-                        background="White",
-                        foreground="Black",
-                        fieldbackground="White",
-                        rowheight=28)
+                        background="#151F32",
+                        foreground="#F3F4F6",
+                        fieldbackground="#151F32",
+                        rowheight=28,
+                        bordercolor="#0B1220",
+                        relief="flat")
 
         style.configure("Treeview.Heading",
-                        background="#548DCF",
-                        foreground="White",
-                        font=("Arial", 11, "bold"))
+                        background="#2ED3B7",
+                        foreground="#0B1220",
+                        font=("Segoe UI", 11, "bold"))
+        style.map("Treeview",
+                  background=[("selected", "#2ED3B7")],
+                  foreground=[("selected", "#0B1220")])
 
-        self.table = ttk.Treeview(self.content_frame,
+        table_container = Frame(self.panel_frame, bg="#151F32")
+        table_container.place(x=20, y=120, width=1200, height=450)
+
+        self.table = ttk.Treeview(table_container,
                                   columns=("catagory_id", "catagory_name"),
                                   show="headings")
 
@@ -107,11 +134,12 @@ class CatagoryManager:
         self.table.column("catagory_id", width=250, anchor="center")
         self.table.column("catagory_name", width=500, anchor="w")
 
-        self.table.place(x=20, y=150, width=1180, height=480)
+        self.table.place(x=0, y=0, width=1150, height=450)
 
-        self.scrollbar = Scrollbar(self.content_frame, orient="vertical", command=self.table.yview)
+        self.scrollbar = Scrollbar(table_container, orient="vertical", command=self.table.yview,
+                                   bg="#151F32", troughcolor="#0B1220", bd=0, highlightthickness=0)
         self.table.configure(yscrollcommand=self.scrollbar.set)
-        self.scrollbar.place(x=1200, y=150, height=480)
+        self.scrollbar.place(x=1150, y=0, height=450)
 
         self.load_catagories()
 
@@ -135,24 +163,28 @@ class CatagoryManager:
     def add_window(self):
         add_win_popup = Toplevel(self.catagory_window)
         add_win_popup.geometry("500x500")
-        add_win_popup.config(bg="#1E1E1E")
+        add_win_popup.config(bg="#111828")
 
-        content_frame = Frame(add_win_popup,bg="White")
+        content_frame = Frame(add_win_popup,bg="#0B1220")
         content_frame.place(x=50, y=70,width=400,height=350)
 
-        heading1 = Label(add_win_popup, text="Add new catagory",bg="#1E1E1E",fg="White",font=("Georgia",20,"bold"))
+        heading1 = Label(add_win_popup, text="Add new catagory",bg="#111828",fg="#F3F4F6",font=("Segoe UI",20,"bold"))
         heading1.place(x=130,y=20)
 
 
-        lbl1 = Label(content_frame, text="Enter catagory ID",bg="White",fg="Black",font=("Arial",10))
+        lbl1 = Label(content_frame, text="Enter catagory ID",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl1.place(x=20,y=20)
-        lbl3 = Label(content_frame, text="Enter catagory name",bg="White",fg="Black",font=("Arial",10))
+        lbl3 = Label(content_frame, text="Enter catagory name",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl3.place(x=20,y=60)
   
  
-        self.entry2 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry2 = Entry(content_frame,width=18,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                             insertbackground="#2ED3B7",highlightbackground="#2ED3B7", highlightcolor="#2ED3B7",
+                             relief=FLAT)
         self.entry2.place(x=210,y=20)
-        self.entry3 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry3 = Entry(content_frame,width=18,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                             insertbackground="#2ED3B7",highlightbackground="#2ED3B7", highlightcolor="#2ED3B7",
+                             relief=FLAT)
         self.entry3.place(x=210,y=60)
 
         def add_data_savenclose():
@@ -192,27 +224,35 @@ class CatagoryManager:
             self.load_catagories()
             add_win_popup.destroy()
 
-        save_but = Button(content_frame,text="Save",command=add_data_savenclose,font=("Arial",8,"bold"),fg="White",bg="Green",relief=FLAT,width=10,height=2,activebackground="Green",activeforeground="White")
+        save_but = Button(content_frame,text="Save",command=add_data_savenclose,font=("Segoe UI",10,"bold"),
+                          fg="#0B1220",bg="#2ED3B7",relief=FLAT,width=12,height=2,
+                          activebackground="#31E3BF",activeforeground="#0B1220")
         save_but.place(x=150,y=150)
 
     def update_window(self):
         update_win_popup = Toplevel(self.catagory_window)
         update_win_popup.geometry("500x500")
-        update_win_popup.config(bg="#1E1E1E")
+        update_win_popup.config(bg="#111828")
 
-        content_frame = Frame(update_win_popup,bg="White")
+        content_frame = Frame(update_win_popup,bg="#0B1220")
         content_frame.place(x=50, y=100,width=400,height=350)
 
-        Label(update_win_popup, text="Enter catagory ID",bg="#1E1E1E",fg="White",font=("Arial",10)).place(x=20,y=20)
-        entry1 = Entry(update_win_popup,width=25,font=("Arial",13))
+        Label(update_win_popup, text="Enter catagory ID",bg="#111828",fg="#F3F4F6",font=("Segoe UI",11,"bold")).place(x=20,y=20)
+        entry1 = Entry(update_win_popup,width=25,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                       insertbackground="#2ED3B7",highlightbackground="#2ED3B7",highlightcolor="#2ED3B7",
+                       relief=FLAT)
         entry1.place(x=130,y=20)
 
-        Label(content_frame, text="Enter new catagory ID",bg="White",fg="Black",font=("Arial",10)).place(x=20,y=20)
-        Label(content_frame, text="Enter new catagory name",bg="White",fg="Black",font=("Arial",10)).place(x=20,y=60)
+        Label(content_frame, text="Enter new catagory ID",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11)).place(x=20,y=20)
+        Label(content_frame, text="Enter new catagory name",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11)).place(x=20,y=60)
 
-        entry2 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        entry2 = Entry(content_frame,width=18,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                       insertbackground="#2ED3B7",highlightbackground="#2ED3B7",highlightcolor="#2ED3B7",
+                       relief=FLAT)
         entry2.place(x=210,y=20)
-        entry3 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        entry3 = Entry(content_frame,width=18,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                       insertbackground="#2ED3B7",highlightbackground="#2ED3B7",highlightcolor="#2ED3B7",
+                       relief=FLAT)
         entry3.place(x=210,y=60)
 
         
@@ -277,11 +317,13 @@ class CatagoryManager:
             self.load_catagories()
             update_win_popup.destroy()
 
-        Button(update_win_popup, text="Search", command=search_cat_id, font=("Arial",8,"bold"),
-               fg="White", bg="#325789", width=10, height=1).place(x=390, y=20)
+        Button(update_win_popup, text="Search", command=search_cat_id, font=("Segoe UI",9,"bold"),
+               fg="#0B1220", bg="#2ED3B7", activebackground="#31E3BF",
+               activeforeground="#0B1220", width=10, height=1).place(x=390, y=20)
 
-        Button(content_frame, text="Update", command=update_n_close, font=("Arial",8,"bold"),
-               fg="White", bg="Green", width=10, height=2).place(x=150, y=150)
+        Button(content_frame, text="Update", command=update_n_close, font=("Segoe UI",10,"bold"),
+               fg="#0B1220", bg="#2ED3B7", activebackground="#31E3BF",
+               activeforeground="#0B1220", width=12, height=2, relief=FLAT).place(x=150, y=150)
 
     def delete_items(self):
         selected_items = self.table.selection()

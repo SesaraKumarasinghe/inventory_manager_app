@@ -21,64 +21,85 @@ class Suppliermanager:
         self.suppliers_window = Toplevel()
         self.suppliers_window.title("Desktop Inventory Management System")
         self.suppliers_window.geometry("1300x800")  # 🔹 Resized window
-        self.suppliers_window.config(bg="#1E1E1E")
+        self.suppliers_window.config(bg="#111828")
 
         heading = Label(self.suppliers_window, text="Suppliers",
-                        bg="#1E1E1E", fg="White",
-                        font=("Georgia", 42, "bold"))
+                        bg="#111828", fg="#F3F4F6",
+                        font=("Segoe UI", 42, "bold"))
         heading.place(x=500, y=10)
 
-        self.content_frame = Frame(self.suppliers_window, bg="#F1F0F0")
+        self.content_frame = Frame(self.suppliers_window, bg="#0B1220")
         self.content_frame.place(x=30, y=80, width=1240, height=670)
 
         sub_heading = Label(self.content_frame, text="Welcome, Admin!",
-                            bg="#F1F0F0", fg="#1E1E1E",
-                            font=("TkDefaultFont", 24, "bold"))
+                            bg="#0B1220", fg="#8A95B8",
+                            font=("Segoe UI", 24, "bold"))
         sub_heading.place(x=20, y=10)
 
-        underline = Frame(self.content_frame, bg="#1E1E1E", height=3, width=1240)
+        underline = Frame(self.content_frame, bg="#2ED3B7", height=3, width=1240)
         underline.place(x=0, y=55)
 
-        # 🔹 Buttons
-        add_sup = Button(self.content_frame, text="Add Supplier",
+        self.panel_frame = Frame(self.content_frame, bg="#151F32")
+        self.panel_frame.place(x=0, y=80, width=1240, height=590)
+
+        panel_heading = Label(self.panel_frame, text="Supplier Directory", bg="#151F32", fg="#F3F4F6",
+                              font=("Segoe UI", 22, "bold"))
+        panel_heading.place(x=20, y=0)
+
+        controls_frame = Frame(self.panel_frame, bg="#151F32")
+        controls_frame.place(x=20, y=40, width=1200, height=60)
+
+        actions_wrapper = Frame(controls_frame, bg="#151F32")
+        actions_wrapper.pack(side=LEFT)
+
+        add_sup = Button(actions_wrapper, text="Add Supplier",
                          command=self.open_add_win, relief=FLAT,
-                         bg="#3962A3", fg="White",
-                         activebackground="#3962A3",
-                         activeforeground="White",
-                         font=("Arial", 9))
-        add_sup.place(x=30, y=80)
+                         bg="#2ED3B7", fg="#0B1220",
+                         activebackground="#31E3BF",
+                         activeforeground="#0B1220",
+                         font=("Segoe UI", 10, "bold"), width=14)
+        add_sup.pack(side=LEFT, padx=5)
 
-        updte_sup = Button(self.content_frame, text="Update Supplier",
+        updte_sup = Button(actions_wrapper, text="Update Supplier",
                            command=self.open_update_win, relief=FLAT,
-                           bg="#359E0B", fg="White",
-                           activebackground="#359E0B",
-                           activeforeground="White",
-                           font=("Arial", 9))
-        updte_sup.place(x=140, y=80)
+                           bg="#1C2A43", fg="#F3F4F6",
+                           activebackground="#223555",
+                           activeforeground="#2ED3B7",
+                           font=("Segoe UI", 10, "bold"), width=14)
+        updte_sup.pack(side=LEFT, padx=5)
 
-        del_sup = Button(self.content_frame, text="Delete Supplier",
+        del_sup = Button(actions_wrapper, text="Delete Supplier",
                          command=self.delete_sup, relief=FLAT,
-                         bg="#F42325", fg="White",
-                         activebackground="#F42325",
-                         activeforeground="White",
-                         font=("Arial", 9))
-        del_sup.place(x=270, y=80)
+                         bg="#F472B6", fg="#0B1220",
+                         activebackground="#F688C5",
+                         activeforeground="#0B1220",
+                         font=("Segoe UI", 10, "bold"), width=14)
+        del_sup.pack(side=LEFT, padx=5)
 
-        search_sup = Label(self.content_frame, text="Search",
-                           bg="#F1F0F0", fg="#1E1E1E",
-                           font=("Arial", 11, "bold"))
-        search_sup.place(x=400, y=82)
+        search_wrapper = Frame(controls_frame, bg="#151F32")
+        search_wrapper.pack(side=RIGHT)
 
-        self.entry = Entry(self.content_frame, width=25, font=("Arial", 12))
-        self.entry.bind("<Return>", self.search_bind)
-        self.entry.place(x=470, y=83)
-
-        refresh_btn = Button(self.content_frame, text="⟳ Refresh",
+        refresh_btn = Button(search_wrapper, text="⟳ Refresh",
                              command=self.load_suppliers,
-                             bg="#2ECC71", fg="white",
-                             relief=FLAT, activebackground="#48C9B0",
-                             font=("Arial", 9))
-        refresh_btn.place(x=770, y=80)
+                             bg="#0B1220", fg="#2ED3B7",
+                             relief=FLAT, activebackground="#1C2A43",
+                             activeforeground="#31E3BF",
+                             font=("Segoe UI", 10, "bold"), width=12)
+        refresh_btn.pack(side=RIGHT, padx=(10, 0))
+
+        self.entry = Entry(search_wrapper, width=28, font=("Segoe UI", 12),
+                           bg="#0B1220", fg="#F3F4F6",
+                           insertbackground="#2ED3B7",
+                           highlightbackground="#2ED3B7",
+                           highlightcolor="#2ED3B7",
+                           relief=FLAT)
+        self.entry.bind("<Return>", self.search_bind)
+        self.entry.pack(side=RIGHT, padx=5)
+
+        search_sup = Label(search_wrapper, text="Search",
+                           bg="#151F32", fg="#F3F4F6",
+                           font=("Segoe UI", 12, "bold"))
+        search_sup.pack(side=RIGHT, padx=5)
 
         self.suppliers_window.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -87,17 +108,25 @@ class Suppliermanager:
         style.theme_use("default")
 
         style.configure("Treeview",
-                        background="White",
-                        foreground="Black",
-                        fieldbackground="White",
-                        rowheight=28)
+                        background="#151F32",
+                        foreground="#F3F4F6",
+                        fieldbackground="#151F32",
+                        rowheight=28,
+                        bordercolor="#0B1220",
+                        relief="flat")
 
         style.configure("Treeview.Heading",
-                        background="#548DCF",
-                        foreground="White",
-                        font=("Arial", 11, "bold"))
+                        background="#2ED3B7",
+                        foreground="#0B1220",
+                        font=("Segoe UI", 11, "bold"))
+        style.map("Treeview",
+                  background=[("selected", "#2ED3B7")],
+                  foreground=[("selected", "#0B1220")])
 
-        self.table = ttk.Treeview(self.content_frame,
+        table_container = Frame(self.panel_frame, bg="#151F32")
+        table_container.place(x=20, y=120, width=1200, height=450)
+
+        self.table = ttk.Treeview(table_container,
                                   columns=("supplier_id", "name", "contact_info"),
                                   show="headings")
 
@@ -109,11 +138,12 @@ class Suppliermanager:
         self.table.column("name", width=300, anchor="w")
         self.table.column("contact_info", width=500, anchor="w")
 
-        self.table.place(x=20, y=150, width=1180, height=480)
+        self.table.place(x=0, y=0, width=1150, height=450)
 
-        self.scrollbar = Scrollbar(self.content_frame, orient="vertical", command=self.table.yview)
+        self.scrollbar = Scrollbar(table_container, orient="vertical", command=self.table.yview,
+                                   bg="#151F32", troughcolor="#0B1220", bd=0, highlightthickness=0)
         self.table.configure(yscrollcommand=self.scrollbar.set)
-        self.scrollbar.place(x=1200, y=150, height=480)
+        self.scrollbar.place(x=1150, y=0, height=450)
 
         self.load_suppliers()
 
@@ -135,27 +165,31 @@ class Suppliermanager:
     def add_window(self):
         add_win_popup = Toplevel()
         add_win_popup.geometry("500x500")
-        add_win_popup.config(bg="#1E1E1E")
+        add_win_popup.config(bg="#111828")
 
-        content_frame = Frame(add_win_popup,bg="White")
+        content_frame = Frame(add_win_popup,bg="#0B1220")
         content_frame.place(x=50, y=70,width=400,height=350)
 
-        heading1 = Label(add_win_popup, text="Add new supplier",bg="#1E1E1E",fg="White",font=("Georgia",20,"bold"))
+        heading1 = Label(add_win_popup, text="Add new supplier",bg="#111828",fg="#F3F4F6",font=("Segoe UI",20,"bold"))
         heading1.place(x=130,y=20)
 
 
-        lbl1 = Label(content_frame, text="Enter supplier ID",bg="White",fg="Black",font=("Arial",10))
+        lbl1 = Label(content_frame, text="Enter supplier ID",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl1.place(x=20,y=20)
-        lbl3 = Label(content_frame, text="Enter supplier name",bg="White",fg="Black",font=("Arial",10))
+        lbl3 = Label(content_frame, text="Enter supplier name",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl3.place(x=20,y=60)
-        lbl4 = Label(content_frame, text="Enter Contact_info",bg="White",fg="Black",font=("Arial",10))
+        lbl4 = Label(content_frame, text="Enter Contact_info",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl4.place(x=20,y=100)
  
-        self.entry2 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        common_entry = dict(width=18,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                            insertbackground="#2ED3B7",highlightbackground="#2ED3B7",
+                            highlightcolor="#2ED3B7",relief=FLAT)
+
+        self.entry2 = Entry(content_frame,**common_entry)
         self.entry2.place(x=210,y=20)
-        self.entry3 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry3 = Entry(content_frame,**common_entry)
         self.entry3.place(x=210,y=60)
-        self.entry4 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry4 = Entry(content_frame,**common_entry)
         self.entry4.place(x=210,y=100)
 
         def add_n_close():
@@ -204,7 +238,7 @@ class Suppliermanager:
             self.load_suppliers()
             add_win_popup.destroy()
 
-        save_but = Button(content_frame,text="Save",command=add_n_close,font=("Arial",8,"bold"),fg="White",bg="Green",relief=FLAT,width=10,height=2,activebackground="Green",activeforeground="White")
+        save_but = Button(content_frame,text="Save",command=add_n_close,font=("Segoe UI",10,"bold"),fg="#0B1220",bg="#2ED3B7",relief=FLAT,width=12,height=2,activebackground="#31E3BF",activeforeground="#0B1220")
         save_but.place(x=150,y=200)
         
     def open_update_win(self):
@@ -213,28 +247,34 @@ class Suppliermanager:
     def update_window(self):
         update_win_popup = Toplevel()
         update_win_popup.geometry("500x500")
-        update_win_popup.config(bg="#1E1E1E")
+        update_win_popup.config(bg="#111828")
 
-        content_frame = Frame(update_win_popup,bg="White")
+        content_frame = Frame(update_win_popup,bg="#0B1220")
         content_frame.place(x=50, y=100,width=400,height=350)
 
-        prdct_id = Label(update_win_popup, text="Enter Supplier ID",bg="#1E1E1E",fg="White",font=("Arial",10))
+        prdct_id = Label(update_win_popup, text="Enter Supplier ID",bg="#111828",fg="#F3F4F6",font=("Segoe UI",11,"bold"))
         prdct_id.place(x=20,y=20)
-        self.entry5 = Entry(update_win_popup,width=25,font=("Arial",13))
+        self.entry5 = Entry(update_win_popup,width=25,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                            insertbackground="#2ED3B7",highlightbackground="#2ED3B7",highlightcolor="#2ED3B7",
+                            relief=FLAT)
         self.entry5.place(x=130,y=20)
 
-        lbl1 = Label(content_frame, text="Enter new supplier ID",bg="White",fg="Black",font=("Arial",10))
+        lbl1 = Label(content_frame, text="Enter new supplier ID",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl1.place(x=20,y=20)
-        lbl3 = Label(content_frame, text="Enter new supplier name",bg="White",fg="Black",font=("Arial",10))
+        lbl3 = Label(content_frame, text="Enter new supplier name",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl3.place(x=20,y=60)
-        lbl4 = Label(content_frame, text="Enter new contact info", bg="White", fg="Black",font=("Arial",10))
+        lbl4 = Label(content_frame, text="Enter new contact info", bg="#0B1220", fg="#F3F4F6",font=("Segoe UI",11))
         lbl4.place(x=20,y=100)
 
-        self.entry6 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        entry_args = dict(width=18,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                          insertbackground="#2ED3B7",highlightbackground="#2ED3B7",
+                          highlightcolor="#2ED3B7",relief=FLAT)
+
+        self.entry6 = Entry(content_frame,**entry_args)
         self.entry6.place(x=210,y=20)
-        self.entry7 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry7 = Entry(content_frame,**entry_args)
         self.entry7.place(x=210,y=60)
-        self.entry8 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry8 = Entry(content_frame,**entry_args)
         self.entry8.place(x=210,y=100)
 
         def check_id():
@@ -312,10 +352,11 @@ class Suppliermanager:
             update_win_popup.destroy()
 
 
-        Button(update_win_popup, text="Search", command=check_id, font=("Arial",8,"bold"),
-               fg="White", bg="#325789", width=10, height=1).place(x=390, y=20)
+        Button(update_win_popup, text="Search", command=check_id, font=("Segoe UI",9,"bold"),
+               fg="#0B1220", bg="#2ED3B7", activebackground="#31E3BF",
+               activeforeground="#0B1220", width=10, height=1).place(x=390, y=20)
             
-        save_but = Button(content_frame,text="Save",command=update_n_close,font=("Arial",8,"bold"),fg="White",bg="Green",relief=FLAT,width=10,height=2,activebackground="Green",activeforeground="White")
+        save_but = Button(content_frame,text="Save",command=update_n_close,font=("Segoe UI",10,"bold"),fg="#0B1220",bg="#2ED3B7",relief=FLAT,width=12,height=2,activebackground="#31E3BF",activeforeground="#0B1220")
         save_but.place(x=150,y=200)
 
     def delete_sup(self):

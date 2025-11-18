@@ -21,64 +21,88 @@ class ProductsManager:
         self.products_window = Toplevel()
         self.products_window.title("Desktop Inventory Management System")
         self.products_window.geometry("1300x800")  # 🔹 Reduced window size
-        self.products_window.config(bg="#1E1E1E")
+        self.products_window.config(bg="#111828")
 
-        heading = Label(self.products_window, text="Products", bg="#1E1E1E", fg="White", font=("Georgia", 42, "bold"))
+        heading = Label(self.products_window, text="Products", bg="#111828", fg="#F3F4F6", font=("Segoe UI", 42, "bold"))
         heading.place(x=520, y=10)
 
-        self.main_frame = Frame(self.products_window, bg="#F1F0F0")
+        self.main_frame = Frame(self.products_window, bg="#0B1220")
         self.main_frame.place(x=30, y=80, width=1240, height=670)
 
-        sub_heading = Label(self.main_frame, text="Welcome, Admin!", bg="#F1F0F0", fg="#1E1E1E",
-                            font=("TkDefaultFont", 24, "bold"))
+        sub_heading = Label(self.main_frame, text="Welcome, Admin!", bg="#0B1220", fg="#8A95B8",
+                            font=("Segoe UI", 24, "bold"))
         sub_heading.place(x=20, y=10)
 
-        underline = Frame(self.main_frame, bg="#1E1E1E", height=3, width=1240)
+        underline = Frame(self.main_frame, bg="#2ED3B7", height=3, width=1240)
         underline.place(x=0, y=55)
 
-        add_prdct = Button(self.main_frame, text="Add Product", command=self.open_add_win, relief=FLAT,
-                           bg="#3962A3", fg="White", activebackground="#3962A3", activeforeground="White",
-                           font=("Arial", 9))
-        add_prdct.place(x=30, y=80)
+        self.content_panel = Frame(self.main_frame, bg="#151F32")
+        self.content_panel.place(x=0, y=80, width=1240, height=590)
 
-        updte_prdct = Button(self.main_frame, text="Update Product", command=self.update_window, relief=FLAT,
-                             bg="#359E0B", fg="White", activebackground="#359E0B", activeforeground="White",
-                             font=("Arial", 9))
-        updte_prdct.place(x=140, y=80)
+        panel_heading = Label(self.content_panel, text="Manage Products", bg="#151F32", fg="#F3F4F6",
+                              font=("Segoe UI", 22, "bold"))
+        panel_heading.place(x=20, y=0)
 
-        del_prdct = Button(self.main_frame, text="Delete Product", command=self.delete_prdct, relief=FLAT,
-                           bg="#F42325", fg="White", activebackground="#F42325", activeforeground="White",
-                           font=("Arial", 9))
-        del_prdct.place(x=270, y=80)
+        controls_frame = Frame(self.content_panel, bg="#151F32")
+        controls_frame.place(x=20, y=40, width=1200, height=60)
 
-        search_lbl = Label(self.main_frame, text="Search", bg="#F1F0F0", fg="#1E1E1E", font=("Arial", 11, "bold"))
-        search_lbl.place(x=400, y=82)
+        actions_wrapper = Frame(controls_frame, bg="#151F32")
+        actions_wrapper.pack(side=LEFT, padx=5)
 
-        self.entry = Entry(self.main_frame, width=25, font=("Arial", 12))
-        self.entry.place(x=470, y=83)
+        add_prdct = Button(actions_wrapper, text="Add Product", command=self.open_add_win, relief=FLAT,
+                           bg="#2ED3B7", fg="#0B1220", activebackground="#31E3BF", activeforeground="#0B1220",
+                           font=("Segoe UI", 10, "bold"), width=14)
+        add_prdct.pack(side=LEFT, padx=5)
+
+        updte_prdct = Button(actions_wrapper, text="Update Product", command=self.update_window, relief=FLAT,
+                             bg="#1C2A43", fg="#F3F4F6", activebackground="#223555", activeforeground="#2ED3B7",
+                             font=("Segoe UI", 10, "bold"), width=14)
+        updte_prdct.pack(side=LEFT, padx=5)
+
+        del_prdct = Button(actions_wrapper, text="Delete Product", command=self.delete_prdct, relief=FLAT,
+                           bg="#F472B6", fg="#0B1220", activebackground="#F688C5", activeforeground="#0B1220",
+                           font=("Segoe UI", 10, "bold"), width=14)
+        del_prdct.pack(side=LEFT, padx=5)
+
+        search_wrapper = Frame(controls_frame, bg="#151F32")
+        search_wrapper.pack(side=RIGHT, padx=5)
+
+        self.entry = Entry(search_wrapper, width=28, font=("Segoe UI", 12), bg="#0B1220", fg="#F3F4F6",
+                           insertbackground="#2ED3B7", highlightbackground="#2ED3B7", highlightcolor="#2ED3B7",
+                           relief=FLAT)
+        self.entry.pack(side=RIGHT, padx=(5, 0))
         self.entry.bind("<Return>", self.search_bind)
 
-        refresh_btn = Button(self.main_frame, text="⟳ Refresh", command=self.refresh_table, bg="#2ECC71", fg="white",
-                             relief=FLAT, activebackground="#48C9B0", font=("Arial", 9))
-        refresh_btn.place(x=770, y=80)
+        search_lbl = Label(search_wrapper, text="Search", bg="#151F32", fg="#F3F4F6", font=("Segoe UI", 12, "bold"))
+        search_lbl.pack(side=RIGHT, padx=(0, 8))
+
+        refresh_btn = Button(search_wrapper, text="⟳ Refresh", command=self.refresh_table, bg="#0B1220", fg="#2ED3B7",
+                             relief=FLAT, activebackground="#1C2A43", activeforeground="#31E3BF",
+                             font=("Segoe UI", 10, "bold"), width=12)
+        refresh_btn.pack(side=RIGHT, padx=5)
 
     def setup_treeview(self):
         style = ttk.Style()
         style.theme_use("default")
 
         style.configure("Treeview",
-                        background="White",
-                        foreground="Black",
-                        fieldbackground="White",
-                        rowheight=28)
+                        background="#151F32",
+                        foreground="#F3F4F6",
+                        fieldbackground="#151F32",
+                        rowheight=28,
+                        bordercolor="#0B1220",
+                        relief="flat")
 
         style.configure("Treeview.Heading",
-                        background="#548DCF",
-                        foreground="White",
-                        font=("Arial", 11, "bold"))
+                        background="#2ED3B7",
+                        foreground="#0B1220",
+                        font=("Segoe UI", 11, "bold"))
+        style.map("Treeview",
+                  background=[("selected", "#2ED3B7")],
+                  foreground=[("selected", "#0B1220")])
 
         self.table = ttk.Treeview(
-            self.main_frame,
+            self.content_panel,
             columns=("products_id", "name", "catagory_id", "supplier_id", "price", "quantity"),
             show="headings"
         )
@@ -101,11 +125,15 @@ class ProductsManager:
         self.table.heading("quantity", text="Quantity")
         self.table.column("quantity", width=100, anchor="center")
 
-        self.table.place(x=20, y=150, width=1180, height=500)
+        table_container = Frame(self.content_panel, bg="#151F32")
+        table_container.place(x=20, y=120, width=1200, height=450)
 
-        self.scroll = Scrollbar(self.main_frame, orient="vertical", command=self.table.yview)
+        self.table.place(in_=table_container, x=0, y=0, width=1150, height=450)
+
+        self.scroll = Scrollbar(table_container, orient="vertical", command=self.table.yview, bg="#151F32",
+                                troughcolor="#0B1220", activebackground="#2ED3B7", bd=0, highlightthickness=0)
         self.table.configure(yscrollcommand=self.scroll.set)
-        self.scroll.place(x=1200, y=150, height=500)
+        self.scroll.place(x=1150, y=0, height=450)
 
         self.load_products()
 
@@ -135,30 +163,34 @@ class ProductsManager:
     def add_window(self):
         self.add_win_popup = Toplevel()
         self.add_win_popup.geometry("500x500")
-        self.add_win_popup.config(bg="#1E1E1E")
+        self.add_win_popup.config(bg="#111828")
 
-        content_frame = Frame(self.add_win_popup,bg="White")
+        content_frame = Frame(self.add_win_popup,bg="#0B1220")
         content_frame.place(x=50, y=70,width=400,height=350)
 
-        heading1 = Label(self.add_win_popup, text="Add new product",bg="#1E1E1E",fg="White",font=("Georgia",20,"bold"))
+        heading1 = Label(self.add_win_popup, text="Add new product",bg="#111828",fg="#F3F4F6",font=("Segoe UI",20,"bold"))
         heading1.place(x=130,y=20)
 
-        lbl1 = Label(content_frame, text="Enter product ID",bg="White",fg="Black",font=("Arial",10))
+        lbl1 = Label(content_frame, text="Enter product ID",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl1.place(x=20,y=20)
-        lbl3 = Label(content_frame, text="Enter product name",bg="White",fg="Black",font=("Arial",10))
+        lbl3 = Label(content_frame, text="Enter product name",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl3.place(x=20,y=60)
-        lbl4 = Label(content_frame, text="Enter catagory",bg="White",fg="Black",font=("Arial",10))
+        lbl4 = Label(content_frame, text="Enter catagory",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl4.place(x=20,y=100)
-        lbl5 = Label(content_frame, text="Enter supplier",bg="White",fg="Black",font=("Arial",10))
+        lbl5 = Label(content_frame, text="Enter supplier",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl5.place(x=20,y=140)
-        lbl6 = Label(content_frame, text="Enter price",bg="White",fg="Black",font=("Arial",10))
+        lbl6 = Label(content_frame, text="Enter price",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl6.place(x=20,y=180)
-        lbl7 = Label(content_frame, text="Enter quantity",bg="White",fg="Black",font=("Arial",10))
+        lbl7 = Label(content_frame, text="Enter quantity",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl7.place(x=20, y=220)
 
-        self.entry2 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        entry_args = dict(width=18,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                          insertbackground="#2ED3B7",highlightbackground="#2ED3B7",
+                          highlightcolor="#2ED3B7",relief=FLAT)
+
+        self.entry2 = Entry(content_frame,**entry_args)
         self.entry2.place(x=210,y=20)
-        self.entry3 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry3 = Entry(content_frame,**entry_args)
         self.entry3.place(x=210,y=60)
 
         cursor = self.dbcon.cursor()
@@ -181,9 +213,9 @@ class ProductsManager:
         self.combo2 = ttk.Combobox(content_frame, values= list(self.sup_map.keys()),state="readonly")
         self.combo2.place(x=210,y=140)
 
-        self.entry7 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry7 = Entry(content_frame,**entry_args)
         self.entry7.place(x=210,y=180)
-        self.entry8 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry8 = Entry(content_frame,**entry_args)
         self.entry8.place(x=210,y=220)
 
         def add_n_close():
@@ -239,7 +271,9 @@ class ProductsManager:
             self.add_win_popup.destroy()
 
 
-        save_but = Button(content_frame,text="Save",font=("Arial",8,"bold"),command=add_n_close,fg="White",bg="Green",relief=FLAT,width=10,height=2,activebackground="Green",activeforeground="White")
+        save_but = Button(content_frame,text="Save",font=("Segoe UI",10,"bold"),command=add_n_close,
+                          fg="#0B1220",bg="#2ED3B7",relief=FLAT,width=12,height=2,
+                          activebackground="#31E3BF",activeforeground="#0B1220")
         save_but.place(x=150,y=270)
 
     def open_update_win(self):
@@ -248,21 +282,23 @@ class ProductsManager:
     def update_window(self):
         self.update_win_popup = Toplevel()
         self.update_win_popup.geometry("500x500")
-        self.update_win_popup.config(bg="#1E1E1E")
+        self.update_win_popup.config(bg="#111828")
 
-        content_frame = Frame(self.update_win_popup,bg="White")
+        content_frame = Frame(self.update_win_popup,bg="#0B1220")
         content_frame.place(x=50, y=100,width=400,height=350)
 
-        prdct_id = Label(self.update_win_popup, text="Enter Product ID",bg="#1E1E1E",fg="White",font=("Arial",10))
+        prdct_id = Label(self.update_win_popup, text="Enter Product ID",bg="#111828",fg="#F3F4F6",font=("Segoe UI",11,"bold"))
         prdct_id.place(x=20,y=20)
 
-        self.entry8 = Entry(self.update_win_popup,width=25,font=("Arial",13))
+        self.entry8 = Entry(self.update_win_popup,width=25,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                             insertbackground="#2ED3B7",highlightbackground="#2ED3B7",highlightcolor="#2ED3B7",
+                             relief=FLAT)
         self.entry8.place(x=130,y=20)
 
-        lbl1 = Label(content_frame, text="Enter new product ID",bg="White",fg="Black",font=("Arial",10))
+        lbl1 = Label(content_frame, text="Enter new product ID",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl1.place(x=20,y=20)
 
-        lbl3 = Label(content_frame, text="Enter new product name",bg="White",fg="Black",font=("Arial",10))
+        lbl3 = Label(content_frame, text="Enter new product name",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl3.place(x=20,y=60)
 
         lbl4 = Label(content_frame, text="Enter new catagory",bg="White",fg="Black",font=("Arial",10))
@@ -277,10 +313,14 @@ class ProductsManager:
         lbl7 = Label(content_frame, text="Enter new quantity",bg="White",fg="Black",font=("Arial",10))
         lbl7.place(x=20, y=220)
 
-        self.entry9 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        common_entry = dict(width=18,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                            insertbackground="#2ED3B7",highlightbackground="#2ED3B7",
+                            highlightcolor="#2ED3B7",relief=FLAT)
+
+        self.entry9 = Entry(content_frame,**common_entry)
         self.entry9.place(x=210,y=20)
 
-        self.entry10 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry10 = Entry(content_frame,**common_entry)
         self.entry10.place(x=210,y=60)
         
         cursor = self.dbcon.cursor()
@@ -303,9 +343,9 @@ class ProductsManager:
         self.combo4 = ttk.Combobox(content_frame,values=list(self.new_sup_map.keys()),state="readonly")
         self.combo4.place(x=210,y=140)
 
-        self.entry11 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry11 = Entry(content_frame,**common_entry)
         self.entry11.place(x=210,y=180)
-        self.entry12 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry12 = Entry(content_frame,**common_entry)
         self.entry12.place(x=210,y=220)
 
         def search_id():
@@ -404,10 +444,12 @@ class ProductsManager:
             self.load_products()
             self.update_win_popup.destroy()
             
-        Button(self.update_win_popup, text="Search", command=search_id, font=("Arial",8,"bold"),
-        fg="White", bg="#325789", width=10, height=1).place(x=390, y=20)
+        Button(self.update_win_popup, text="Search", command=search_id, font=("Segoe UI",9,"bold"),
+        fg="#0B1220", bg="#2ED3B7", activebackground="#31E3BF", activeforeground="#0B1220", width=10, height=1).place(x=390, y=20)
             
-        save_but = Button(content_frame,text="Save",font=("Arial",8,"bold"),fg="White",bg="Green",command=update_n_close,relief=FLAT,width=10,height=2,activebackground="Green",activeforeground="White")
+        save_but = Button(content_frame,text="Save",font=("Segoe UI",10,"bold"),fg="#0B1220",bg="#2ED3B7",
+                          command=update_n_close,relief=FLAT,width=12,height=2,activebackground="#31E3BF",
+                          activeforeground="#0B1220")
         save_but.place(x=150,y=270)
 
     def delete_prdct(self):

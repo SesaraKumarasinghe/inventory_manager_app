@@ -20,82 +20,110 @@ class TransactionsManager:
         self.transactions_window = Toplevel()
         self.transactions_window.title("Desktop Inventory Management System")
         self.transactions_window.geometry("1300x800")
-        self.transactions_window.config(bg="#1E1E1E")
+        self.transactions_window.config(bg="#111828")
 
         heading = Label(
             self.transactions_window,
             text="Transactions",
-            bg="#1E1E1E",
-            fg="White",
-            font=("Georgia", 38, "bold")
+            bg="#111828",
+            fg="#F3F4F6",
+            font=("Segoe UI", 38, "bold")
         )
-        heading.place(x=480, y=10)
+        heading.place(x=480, y=5)
 
-        self.content_frame = Frame(self.transactions_window, bg="#F1F0F0")
+        self.content_frame = Frame(self.transactions_window, bg="#0B1220")
         self.content_frame.place(x=30, y=80, width=1240, height=670)
 
         sub_heading = Label(
             self.content_frame,
             text="Welcome, Admin!",
-            bg="#F1F0F0",
-            fg="#1E1E1E",
-            font=("TkDefaultFont", 22, "bold")
+            bg="#0B1220",
+            fg="#8A95B8",
+            font=("Segoe UI", 22, "bold")
         )
-        sub_heading.place(x=20, y=10)
+        sub_heading.place(x=20, y=9)
 
-        underline = Frame(self.content_frame, bg="#1E1E1E", height=3, width=1240)
+        underline = Frame(self.content_frame, bg="#2ED3B7", height=3, width=1240)
         underline.place(x=0, y=55)
 
+        self.panel_frame = Frame(self.content_frame, bg="#151F32")
+        self.panel_frame.place(x=0, y=80, width=1240, height=590)
+
+        panel_heading = Label(self.panel_frame, text="Transaction Center", bg="#151F32", fg="#F3F4F6",
+                              font=("Segoe UI", 19, "bold"))
+        panel_heading.place(x=20, y=0)
+
+        controls_frame = Frame(self.panel_frame, bg="#151F32")
+        controls_frame.place(x=20, y=40, width=1200, height=60)
+
+        actions_wrapper = Frame(controls_frame, bg="#151F32")
+        actions_wrapper.pack(side=LEFT)
+
         add_tran = Button(
-            self.content_frame,
+            actions_wrapper,
             text="Add Transaction",
             command=self.open_add_win,
             relief="flat",
-            bg="#3962A3",
-            fg="White",
-            activebackground="#3962A3",
-            activeforeground="White",
-            font=("Arial", 9)
+            bg="#2ED3B7",
+            fg="#0B1220",
+            activebackground="#31E3BF",
+            activeforeground="#0B1220",
+            font=("Segoe UI", 10, "bold"),
+            width=16
         )
-        add_tran.place(x=30, y=80)
+        add_tran.pack(side=LEFT, padx=5)
 
         del_tran = Button(
-            self.content_frame,
+            actions_wrapper,
             text="Delete Transaction",
             command=self.delete_tran,
             relief="flat",
-            bg="#F42325",
-            fg="White",
-            activebackground="#F42325",
-            activeforeground="White",
-            font=("Arial", 9)
+            bg="#F472B6",
+            fg="#0B1220",
+            activebackground="#F688C5",
+            activeforeground="#0B1220",
+            font=("Segoe UI", 10, "bold"),
+            width=16
         )
-        del_tran.place(x=150, y=80)
+        del_tran.pack(side=LEFT, padx=5)
 
-        search_sup = Label(
-            self.content_frame,
-            text="Search",
-            bg="#F1F0F0",
-            fg="#1E1E1E",
-            font=("Arial", 11, "bold")
-        )
-        search_sup.place(x=300, y=82)
-
-        self.entry = Entry(self.content_frame, width=25, font=("Arial", 12))
-        self.entry.place(x=370, y=83)
-        self.entry.bind("<Return>", self.search_bind)
+        search_wrapper = Frame(controls_frame, bg="#151F32")
+        search_wrapper.pack(side=RIGHT)
 
         refresh_btn = Button(
-            self.content_frame,
+            search_wrapper,
             text="⟳ Refresh",
             command=self.refresh_table,
-            bg="#2ECC71",
-            fg="white",
+            bg="#0B1220",
+            fg="#2ED3B7",
             relief=FLAT,
-            activebackground="#48C9B0",
-            font=("Arial", 9)
+            activebackground="#1C2A43",
+            activeforeground="#31E3BF",
+            font=("Segoe UI", 10, "bold"),
+            width=12
         )
-        refresh_btn.place(x=730, y=80)
+        refresh_btn.pack(side=RIGHT, padx=(10, 0))
+
+        self.entry = Entry(search_wrapper, width=28, font=("Segoe UI", 12),
+                           bg="#0B1220", fg="#F3F4F6",
+                           insertbackground="#2ED3B7",
+                           highlightbackground="#2ED3B7",
+                           highlightcolor="#2ED3B7",
+                           relief=FLAT)
+        self.entry.pack(side=RIGHT, padx=5)
+        self.entry.bind("<Return>", self.search_bind)
+
+        search_sup = Label(
+            search_wrapper,
+            text="Search",
+            bg="#151F32",
+            fg="#F3F4F6",
+            font=("Segoe UI", 12, "bold")
+        )
+        search_sup.pack(side=RIGHT, padx=5)
+
+        self.table_container = Frame(self.panel_frame, bg="#151F32")
+        self.table_container.place(x=20, y=120, width=1200, height=430)
 
         self.transactions_window.protocol("WM_DELETE_WINDOW", self.close_connection)
 
@@ -103,17 +131,22 @@ class TransactionsManager:
         style = ttk.Style()
         style.theme_use("default")
         style.configure("Treeview",
-                        background="White",
-                        foreground="Black",
-                        fieldbackground="White",
-                        rowheight=28)
+                        background="#151F32",
+                        foreground="#F3F4F6",
+                        fieldbackground="#151F32",
+                        rowheight=28,
+                        bordercolor="#0B1220",
+                        relief="flat")
         style.configure("Treeview.Heading",
-                        background="#548DCF",
-                        foreground="White",
-                        font=("Arial", 11, "bold"))
+                        background="#2ED3B7",
+                        foreground="#0B1220",
+                        font=("Segoe UI", 11, "bold"))
+        style.map("Treeview",
+                  background=[("selected", "#2ED3B7")],
+                  foreground=[("selected", "#0B1220")])
 
         self.table = ttk.Treeview(
-            self.transactions_window,
+            self.table_container,
             columns=("transaction_id", "products_id", "user_id", "type", "unit_price",
                      "quantity", "total_amount", "date"),
             show="headings"
@@ -145,11 +178,12 @@ class TransactionsManager:
             self.table.heading(col, text=headings[col])
             self.table.column(col, width=widths[col])
 
-        self.table.place(x=60, y=230, width=1180, height=500)
+        self.table.place(x=0, y=0, width=1150, height=430)
 
-        self.scroll = Scrollbar(self.content_frame, orient="vertical", command=self.table.yview)
+        self.scroll = Scrollbar(self.table_container, orient="vertical", command=self.table.yview,
+                                bg="#151F32", troughcolor="#0B1220", bd=0, highlightthickness=0)
         self.table.configure(yscrollcommand=self.scroll.set)
-        self.scroll.place(x=1220, y=160, height=540)
+        self.scroll.place(x=1150, y=0, height=430)
 
         self.load_transactions()
 
@@ -170,15 +204,15 @@ class TransactionsManager:
     def add_window(self):
         self.add_win_popup = Toplevel()
         self.add_win_popup.geometry("500x500")
-        self.add_win_popup.config(bg="#1E1E1E")
+        self.add_win_popup.config(bg="#111828")
 
-        content_frame = Frame(self.add_win_popup,bg="White")
+        content_frame = Frame(self.add_win_popup,bg="#0B1220")
         content_frame.place(x=50, y=70,width=400,height=350)
 
-        heading1 = Label(self.add_win_popup, text="Add new transaction",bg="#1E1E1E",fg="White",font=("Georgia",20,"bold"))
+        heading1 = Label(self.add_win_popup, text="Add new transaction",bg="#111828",fg="#F3F4F6",font=("Segoe UI",20,"bold"))
         heading1.place(x=130,y=20)
 
-        lbl1 = Label(content_frame,text="Product Name",bg="White",fg="Black",font=("Arial",10))
+        lbl1 = Label(content_frame,text="Product Name",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl1.place(x=20,y=20)
 
         cursor = self.dbcon.cursor()
@@ -192,10 +226,10 @@ class TransactionsManager:
             messagebox.showerror("Error","No products found in database.",parent=self.add_win_popup)
             return
 
-        self.combo1 = ttk.Combobox(content_frame,values=list(self.prdct_map.keys()),state="readonly")
+        self.combo1 = ttk.Combobox(content_frame,values=list(self.prdct_map.keys()),state="readonly",font=("Segoe UI",11))
         self.combo1.place(x=210,y=20)
 
-        lbl2 = Label(content_frame, text="User Role",bg="White",fg="Black",font=("Arial",10))
+        lbl2 = Label(content_frame, text="User Role",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl2.place(x=20,y=60)
 
         cursor = self.dbcon.cursor()
@@ -209,23 +243,27 @@ class TransactionsManager:
             messagebox.showerror("Error","No users found in database.",parent=self.add_win_popup)
             return
 
-        self.combo2 = ttk.Combobox(content_frame,values= list(self.user_map.keys()),state="readonly")
+        self.combo2 = ttk.Combobox(content_frame,values= list(self.user_map.keys()),state="readonly",font=("Segoe UI",11))
         self.combo2.place(x=210,y=60)
 
-        lbl3 = Label(content_frame, text="Type",bg="White",fg="Black",font=("Arial",10))
+        lbl3 = Label(content_frame, text="Type",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl3.place(x=20,y=100)
         type_options = ["Purchase", "Sale"]
-        self.combo3 = ttk.Combobox(content_frame,values= type_options,state="readonly")
+        self.combo3 = ttk.Combobox(content_frame,values= type_options,state="readonly",font=("Segoe UI",11))
         self.combo3.place(x=210,y=100)
 
-        lbl4 = Label(content_frame, text="Unit Price",bg="White",fg="Black",font=("Arial",10))
+        lbl4 = Label(content_frame, text="Unit Price",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl4.place(x=20,y=140)
-        self.entry2 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        common_entry = dict(width=18,font=("Segoe UI",13),bg="#151F32",fg="#F3F4F6",
+                            insertbackground="#2ED3B7",highlightbackground="#2ED3B7",
+                            highlightcolor="#2ED3B7",relief=FLAT)
+
+        self.entry2 = Entry(content_frame,**common_entry)
         self.entry2.place(x=210,y=140)
 
-        lbl5 = Label(content_frame, text="Quantity",bg="White",fg="Black",font=("Arial",10))
+        lbl5 = Label(content_frame, text="Quantity",bg="#0B1220",fg="#F3F4F6",font=("Segoe UI",11))
         lbl5.place(x=20,y=180)
-        self.entry3 = Entry(content_frame,width=18,font=("Arial",13),bg="#FEFAEA",fg="Black")
+        self.entry3 = Entry(content_frame,**common_entry)
         self.entry3.place(x=210,y=180)
 
         def add_n_close():
@@ -281,7 +319,9 @@ class TransactionsManager:
             finally:
                 cursor.close()
 
-        save_but = Button(content_frame,text="Save",command=add_n_close,font=("Arial",8,"bold"),fg="White",bg="Green",relief="flat",width=10,height=2,activebackground="Green",activeforeground="White")
+        save_but = Button(content_frame,text="Save",command=add_n_close,font=("Segoe UI",10,"bold"),
+                          fg="#0B1220",bg="#2ED3B7",relief="flat",width=12,height=2,
+                          activebackground="#31E3BF",activeforeground="#0B1220")
         save_but.place(x=150,y=250)
 
     def delete_tran(self):
