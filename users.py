@@ -17,7 +17,6 @@ class Users:
         self.load_users()
         self.create_stats()
 
-    # ------------------- MAIN WINDOW -------------------
     def main_window(self):
         self.dashboard_window = Toplevel()
         self.dashboard_window.title("Desktop Inventory Management System")
@@ -25,12 +24,10 @@ class Users:
         self.dashboard_window.config(bg="#111828")
         self.dashboard_window.protocol("WM_DELETE_WINDOW", self.on_close)
 
-        # Heading
         heading = Label(self.dashboard_window, text="Users", bg="#111828", fg="#F3F4F6",
                         font=("Segoe UI", 40, "bold"))
         heading.place(x=460, y=5)
 
-        # Main Frame
         main_frame = Frame(self.dashboard_window, bg="#0B1220")
         main_frame.place(x=30, y=100, width=1140, height=560)
 
@@ -41,11 +38,9 @@ class Users:
         underline = Frame(main_frame, bg="#2ED3B7", height=3, width=1140)
         underline.place(x=0, y=60)
 
-        # Content Frame
         self.content_frame = Frame(main_frame, bg="#151F32")
         self.content_frame.place(x=0, y=80, width=1140, height=500)
 
-        # Buttons
         add_btn = Button(self.content_frame, text="Add User", relief="flat", command=self.add_user,
                          bg="#2ED3B7", fg="#0B1220", font=("Segoe UI", 11, "bold"),
                          activebackground="#31E3BF", activeforeground="#0B1220")
@@ -77,7 +72,6 @@ class Users:
         self.search_entry.place(x=700, y=35, width=220, height=28)
         self.search_entry.bind("<Return>", self.search_bind)
 
-        # Labels for stats and latest
         stats_lbl = Label(self.content_frame, text="Stats", bg="#151F32", fg="#F3F4F6",
                           font=("Segoe UI", 24, "bold"))
         stats_lbl.place(x=30, y=85)
@@ -86,7 +80,6 @@ class Users:
                            font=("Segoe UI", 24, "bold"))
         latest_lbl.place(x=400, y=85)
 
-    # ------------------- TREEVIEW -------------------
     def create_treeview(self):
         style = ttk.Style()
         style.theme_use("default")
@@ -105,7 +98,6 @@ class Users:
         self.table.column("role", width=100, anchor="center")
         self.table.place(x=400, y=150, width=710, height=270)
 
-    # ------------------- LOAD USERS -------------------
     def load_users(self):
         cursor = self.dbcon.cursor()
         cursor.execute("SELECT user_id, user_name, role FROM users")
@@ -119,7 +111,6 @@ class Users:
         else:
             self.table.insert("", "end", values=("No Users", "", ""))
 
-    # ------------------- STATS -------------------
     def create_stats(self):
         frame = Frame(self.content_frame, bg="#0B1220")
         frame.place(x=30, y=150, width=350, height=270)
@@ -154,7 +145,6 @@ class Users:
             Label(frame, text=str(val), bg="#0B1220", fg="#2ED3B7", font=("Segoe UI", 13, "bold")).place(x=180, y=y_pos)
             y_pos += 40
 
-    # ------------------- ADD USER -------------------
     def add_user(self):
         add_win = Toplevel()
         add_win.geometry("500x400")
@@ -204,7 +194,6 @@ class Users:
                fg="#0B1220", bg="#2ED3B7", relief=FLAT, width=12, height=2,
                activebackground="#31E3BF", activeforeground="#0B1220").place(x=130, y=200)
 
-    # ------------------- UPDATE USER -------------------
     def open_update_win(self):
         update_win = Toplevel()
         update_win.geometry("500x400")
@@ -260,7 +249,6 @@ class Users:
                fg="#0B1220", bg="#2ED3B7", relief=FLAT, width=12, height=2,
                activebackground="#31E3BF", activeforeground="#0B1220").place(x=120, y=220)
 
-    # ------------------- SEARCH -------------------
     def search_sup(self):
         search_val = self.search_entry.get().strip()
         if not search_val:
@@ -284,7 +272,6 @@ class Users:
     def search_bind(self, event):
         self.search_sup()
 
-    # ------------------- DELETE USER -------------------
     def delete_user(self):
         selected = self.table.selection()
         if not selected:
@@ -306,7 +293,6 @@ class Users:
         finally:
             cursor.close()
 
-    # ------------------- CLOSE -------------------
     def close_connection(self):
         if self.dbcon.is_connected():
             self.dbcon.close()

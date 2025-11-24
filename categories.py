@@ -3,7 +3,7 @@ from tkinter import ttk
 import mysql.connector
 from tkinter import messagebox
 
-class CatagoryManager:
+class CategoryManager:
     def __init__(self, root):
         self.dbcon = mysql.connector.connect(
             host="localhost",

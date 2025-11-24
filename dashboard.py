@@ -4,6 +4,7 @@ import mysql.connector
 from products import ProductsManager
 from transactions import TransactionsManager
 from reports import ReportsManager
+from users import Users
 
 class Dashboard:
     def __init__(self, root):
@@ -78,7 +79,7 @@ class Dashboard:
         view_rprts.place(x=340, y=30, width=140, height=35)
 
         users = Button(
-            self.content_frame, text="Users", relief="flat",
+            self.content_frame, text="Users", relief="flat",command=self.open_users,
             bg="#F472B6", fg="#0B1220",
             activebackground="#F688C5", activeforeground="#0B1220",
             font=("Segoe UI", 11, "bold")
@@ -270,6 +271,9 @@ class Dashboard:
 
     def open_reports(self):
         ReportsManager(self.root)
+
+    def open_users(self):
+        Users(self.root)
 
 
 

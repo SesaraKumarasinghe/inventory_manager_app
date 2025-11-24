@@ -4,7 +4,7 @@ from dashboard import Dashboard
 from products import ProductsManager
 from suppliers import Suppliermanager
 from transactions import TransactionsManager
-from catagories import CatagoryManager
+from categories import CategoryManager
 from reports import ReportsManager
 
 def logged_in_window():
@@ -32,7 +32,7 @@ def logged_in_window():
     button_grid = Frame(content_frame, bg="#0B1220")
     button_grid.place(x=30, y=90, width=690, height=460)
 
-    img = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\DASHBOARD.jpg")
+    img = Image.open("assets\\DASHBOARD.jpg")
     dashboard_img = ImageTk.PhotoImage(img)
 
     def open_dashboard():
@@ -42,7 +42,7 @@ def logged_in_window():
     dashboard_but.image = dashboard_img
     dashboard_but.grid(row=0, column=0, padx=20, pady=20)
 
-    img2 = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\PRODUCT.jpg")
+    img2 = Image.open("assets\\PRODUCT.jpg")
     product_img = ImageTk.PhotoImage(img2)
 
     def open_products():
@@ -52,7 +52,7 @@ def logged_in_window():
     product_but.image = product_img
     product_but.grid(row=0, column=1, padx=20, pady=20)
 
-    img3 = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\SUPPLIER.jpg")
+    img3 = Image.open("assets\\SUPPLIER.jpg")
     supplier_img = ImageTk.PhotoImage(img3)
 
     def open_suppliers():
@@ -62,7 +62,7 @@ def logged_in_window():
     supplier_but.image = supplier_img
     supplier_but.grid(row=0, column=2, padx=20, pady=20)
 
-    img4 = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\TRANSACTIONS.jpg")
+    img4 = Image.open("assets\\TRANSACTIONS.jpg")
     transaction_img = ImageTk.PhotoImage(img4)
     
     def open_transactions():
@@ -72,7 +72,7 @@ def logged_in_window():
     transaction_but.image = transaction_img
     transaction_but.grid(row=1, column=0, padx=20, pady=20)
 
-    img5 = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\REPORTS.jpg")
+    img5 = Image.open("assets\\REPORTS.jpg")
     report_img = ImageTk.PhotoImage(img5)
 
     def open_reports():
@@ -82,15 +82,20 @@ def logged_in_window():
     report_but.image = report_img
     report_but.grid(row=1, column=1, padx=20, pady=20)
 
-    img6 = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\screenshot5.jpg")
-    catagory_img = ImageTk.PhotoImage(img6)
+    img6 = Image.open("assets\\screenshot5.jpg")
+    category_img = ImageTk.PhotoImage(img6)
 
-    def open_catagories():
-        CatagoryManager(window2)
+    def open_categories():
+        CategoryManager(window2)
 
-    catagory_but = Button(button_grid,text="Catagories",command=open_catagories,fg="#F3F4F6",bg="#151F32",font=("Segoe UI", 11, "bold"), image=catagory_img ,compound=TOP,relief=FLAT,activebackground="#1C2A43",activeforeground="#2ED3B7",bd=0,padx=10,pady=10)
-    catagory_but.image = catagory_img
-    catagory_but.grid(row=1, column=2, padx=20, pady=20)
+    category_but = Button(button_grid,text="Categories",command=open_categories,fg="#F3F4F6",bg="#151F32",font=("Segoe UI", 11, "bold"), image=category_img ,compound=TOP,relief=FLAT,activebackground="#1C2A43",activeforeground="#2ED3B7",bd=0,padx=10,pady=10)
+    category_but.image = category_img
+    category_but.grid(row=1, column=2, padx=20, pady=20)
+
+    def on_close():
+        window2.destroy()
+
+    window2.protocol("WM_DELETE_WINDOW", on_close)
 
 
 

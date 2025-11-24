@@ -19,7 +19,7 @@ except mysql.connector.Error as err:
 window = Tk()
 window.geometry("1920x1080")
 window.title("Desktop Inventory Management System")
-img = Image.open("C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\screenshot3.png")
+img = Image.open("assets\\screenshot3.png")
 icon = ImageTk.PhotoImage(img)
 window.iconphoto(True, icon)
 window.config(bg="#111828")
@@ -27,7 +27,7 @@ window.config(bg="#111828")
 login_frame = Frame(window, bg="#0B1220", bd=5, relief="flat")
 login_frame.place(x=715, y=150, width=500, height=510)
 
-photo = PhotoImage(file="C:\\Pythonprogrammes\\Inventory_management_app\\New folder\\screenshot3.png")
+photo = PhotoImage(file="assets\\screenshot3.png")
 log_label = Label(window, text="DIM System", fg="#8A95B8", bg="#0B1220", font=("Georgia", 50, "bold"),
                   image=photo, compound="top")
 log_label.image = photo
